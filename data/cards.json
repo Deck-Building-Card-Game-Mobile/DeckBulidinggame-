@@ -1,0 +1,1575 @@
+{
+  "version": 1,
+  "source": "docs/design/Dungeon_Card_Set_v1.xlsx",
+  "cards": [
+    {
+      "id": "S01",
+      "name": "Strike",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Starter",
+      "archetype": "Neutral",
+      "text": "Deal 6 damage.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 6,
+          "target": "target"
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "x5 in starter deck",
+      "upgraded": {
+        "text": "Deal 9 damage.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 9,
+            "target": "target"
+          }
+        ]
+      },
+      "starter_copies": 5
+    },
+    {
+      "id": "S02",
+      "name": "Defend",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Starter",
+      "archetype": "Neutral",
+      "text": "Gain 5 block.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 5
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "x4 in starter deck",
+      "upgraded": {
+        "text": "Gain 8 block.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 8
+          }
+        ]
+      },
+      "starter_copies": 4
+    },
+    {
+      "id": "S03",
+      "name": "Lantern Bash",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Starter",
+      "archetype": "Neutral",
+      "text": "Deal 5 damage. Apply 1 Vulnerable.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 5,
+          "target": "target"
+        },
+        {
+          "op": "apply_status",
+          "status": "vulnerable",
+          "amount": 1,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Vulnerable"
+      ],
+      "balance_other_value": 0,
+      "notes": "x1 signature card; teaches debuffs",
+      "upgraded": {
+        "text": "Deal 7 damage. Apply 2 Vulnerable.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 7,
+            "target": "target"
+          },
+          {
+            "op": "apply_status",
+            "status": "vulnerable",
+            "amount": 2,
+            "target": "target"
+          }
+        ]
+      },
+      "starter_copies": 1
+    },
+    {
+      "id": "C01",
+      "name": "Slash",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Neutral",
+      "text": "Deal 9 damage.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 9,
+          "target": "target"
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 12 damage.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 12,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C02",
+      "name": "Quick Jab",
+      "type": "Attack",
+      "cost": 0,
+      "rarity": "Common",
+      "archetype": "Brawler",
+      "text": "Deal 3 damage.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 3,
+          "target": "target"
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "Free attacks scale with Strength",
+      "upgraded": {
+        "text": "Deal 5 damage.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 5,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C03",
+      "name": "Cleave",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Neutral",
+      "text": "Deal 6 damage to ALL enemies.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 6,
+          "target": "all_enemies"
+        }
+      ],
+      "keywords": [
+        "ALL enemies"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 9 damage to ALL enemies.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 9,
+            "target": "all_enemies"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C04",
+      "name": "Heavy Swing",
+      "type": "Attack",
+      "cost": 2,
+      "rarity": "Common",
+      "archetype": "Brawler",
+      "text": "Deal 15 damage.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 15,
+          "target": "target"
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 20 damage.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 20,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C05",
+      "name": "Twin Strike",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Brawler",
+      "text": "Deal 4 damage twice.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 4,
+          "target": "target",
+          "hits": 2
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 1,
+      "notes": "Other: multi-hit doubles Strength bonus",
+      "upgraded": {
+        "text": "Deal 5 damage twice.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 5,
+            "target": "target",
+            "hits": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "C06",
+      "name": "Poisoned Blade",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Venom",
+      "text": "Deal 3 damage. Apply 4 Poison.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 3,
+          "target": "target"
+        },
+        {
+          "op": "apply_status",
+          "status": "poison",
+          "amount": 4,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Poison"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 4 damage. Apply 6 Poison.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 4,
+            "target": "target"
+          },
+          {
+            "op": "apply_status",
+            "status": "poison",
+            "amount": 6,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C07",
+      "name": "Shield Slam",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Guardian",
+      "text": "Deal 4 damage. Gain 4 block.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 4,
+          "target": "target"
+        },
+        {
+          "op": "block",
+          "amount": 4
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 6 damage. Gain 6 block.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 6,
+            "target": "target"
+          },
+          {
+            "op": "block",
+            "amount": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "C08",
+      "name": "Venom Fang",
+      "type": "Skill",
+      "cost": 0,
+      "rarity": "Common",
+      "archetype": "Venom",
+      "text": "Apply 2 Poison.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "apply_status",
+          "status": "poison",
+          "amount": 2,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Poison"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Apply 3 Poison.",
+        "effects": [
+          {
+            "op": "apply_status",
+            "status": "poison",
+            "amount": 3,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C09",
+      "name": "Pommel Strike",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Tactician",
+      "text": "Deal 5 damage. Draw 1 card.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 5,
+          "target": "target"
+        },
+        {
+          "op": "draw",
+          "amount": 1
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 7 damage. Draw 1 card.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 7,
+            "target": "target"
+          },
+          {
+            "op": "draw",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "name": "Torch Swing",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Tactician",
+      "text": "Deal 6 damage. Apply 1 Vulnerable.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 6,
+          "target": "target"
+        },
+        {
+          "op": "apply_status",
+          "status": "vulnerable",
+          "amount": 1,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Vulnerable"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 8 damage. Apply 2 Vulnerable.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 8,
+            "target": "target"
+          },
+          {
+            "op": "apply_status",
+            "status": "vulnerable",
+            "amount": 2,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "name": "Brace",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Guardian",
+      "text": "Gain 7 block.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 7
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 10 block.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "name": "Raise Shield",
+      "type": "Skill",
+      "cost": 2,
+      "rarity": "Common",
+      "archetype": "Guardian",
+      "text": "Gain 12 block.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 12
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 16 block.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 16
+          }
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "name": "Dodge Roll",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Guardian",
+      "text": "Gain 4 block. Draw 1 card.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 4
+        },
+        {
+          "op": "draw",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 6 block. Draw 1 card.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 6
+          },
+          {
+            "op": "draw",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "name": "Toxic Vial",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Venom",
+      "text": "Apply 6 Poison.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "apply_status",
+          "status": "poison",
+          "amount": 6,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Poison"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Apply 9 Poison.",
+        "effects": [
+          {
+            "op": "apply_status",
+            "status": "poison",
+            "amount": 9,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "name": "Bandage",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Neutral",
+      "text": "Gain 4 block. Heal 4 HP. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 4
+        },
+        {
+          "op": "heal",
+          "amount": 4
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Heal",
+        "Exhaust"
+      ],
+      "balance_other_value": 0,
+      "notes": "Only in-combat heal at Common",
+      "upgraded": {
+        "text": "Gain 5 block. Heal 6 HP. Exhaust.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 5
+          },
+          {
+            "op": "heal",
+            "amount": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "name": "Scout Ahead",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Tactician",
+      "text": "Draw 2 cards.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "draw",
+          "amount": 2
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Draw 3 cards.",
+        "effects": [
+          {
+            "op": "draw",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "C17",
+      "name": "Smoke Bomb",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Tactician",
+      "text": "Apply 2 Weak to ALL enemies.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "apply_status",
+          "status": "weak",
+          "amount": 2,
+          "target": "all_enemies"
+        }
+      ],
+      "keywords": [
+        "Weak",
+        "ALL enemies"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Apply 3 Weak to ALL enemies.",
+        "effects": [
+          {
+            "op": "apply_status",
+            "status": "weak",
+            "amount": 3,
+            "target": "all_enemies"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C18",
+      "name": "Sharpen",
+      "type": "Skill",
+      "cost": 0,
+      "rarity": "Common",
+      "archetype": "Brawler",
+      "text": "Your next Attack this turn deals 3 extra damage.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "next_attack_bonus",
+          "amount": 3
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 3,
+      "notes": "Other: conditional +3 damage",
+      "upgraded": {
+        "text": "Your next Attack this turn deals 5 extra damage.",
+        "effects": [
+          {
+            "op": "next_attack_bonus",
+            "amount": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "C19",
+      "name": "Deep Breath",
+      "type": "Skill",
+      "cost": 0,
+      "rarity": "Common",
+      "archetype": "Tactician",
+      "text": "Draw 1 card. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "draw",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Exhaust"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Draw 2 cards. Exhaust.",
+        "effects": [
+          {
+            "op": "draw",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "C20",
+      "name": "Stand Firm",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Common",
+      "archetype": "Guardian",
+      "text": "Gain 5 block. Apply 1 Weak.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 5
+        },
+        {
+          "op": "apply_status",
+          "status": "weak",
+          "amount": 1,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Weak"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 7 block. Apply 1 Weak.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 7
+          },
+          {
+            "op": "apply_status",
+            "status": "weak",
+            "amount": 1,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "U01",
+      "name": "Expose",
+      "type": "Attack",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Tactician",
+      "text": "Deal 5 damage. Apply 2 Vulnerable.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 5,
+          "target": "target"
+        },
+        {
+          "op": "apply_status",
+          "status": "vulnerable",
+          "amount": 2,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Vulnerable"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 7 damage. Apply 3 Vulnerable.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 7,
+            "target": "target"
+          },
+          {
+            "op": "apply_status",
+            "status": "vulnerable",
+            "amount": 3,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "U02",
+      "name": "Shield Bash",
+      "type": "Attack",
+      "cost": 2,
+      "rarity": "Uncommon",
+      "archetype": "Guardian",
+      "text": "Deal 8 damage. Gain 7 block.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 8,
+          "target": "target"
+        },
+        {
+          "op": "block",
+          "amount": 7
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 11 damage. Gain 9 block.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 11,
+            "target": "target"
+          },
+          {
+            "op": "block",
+            "amount": 9
+          }
+        ]
+      }
+    },
+    {
+      "id": "U03",
+      "name": "Whirling Blade",
+      "type": "Attack",
+      "cost": 2,
+      "rarity": "Uncommon",
+      "archetype": "Brawler",
+      "text": "Deal 11 damage to ALL enemies.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 11,
+          "target": "all_enemies"
+        }
+      ],
+      "keywords": [
+        "ALL enemies"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 15 damage to ALL enemies.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 15,
+            "target": "all_enemies"
+          }
+        ]
+      }
+    },
+    {
+      "id": "U04",
+      "name": "Venom Cloud",
+      "type": "Skill",
+      "cost": 2,
+      "rarity": "Uncommon",
+      "archetype": "Venom",
+      "text": "Apply 7 Poison to ALL enemies.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "apply_status",
+          "status": "poison",
+          "amount": 7,
+          "target": "all_enemies"
+        }
+      ],
+      "keywords": [
+        "Poison",
+        "ALL enemies"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Apply 10 Poison to ALL enemies.",
+        "effects": [
+          {
+            "op": "apply_status",
+            "status": "poison",
+            "amount": 10,
+            "target": "all_enemies"
+          }
+        ]
+      }
+    },
+    {
+      "id": "U05",
+      "name": "Rally",
+      "type": "Skill",
+      "cost": 0,
+      "rarity": "Uncommon",
+      "archetype": "Tactician",
+      "text": "Gain 1 energy. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "gain_energy",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Exhaust"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 1 energy. Draw 1 card. Exhaust.",
+        "effects": [
+          {
+            "op": "gain_energy",
+            "amount": 1
+          },
+          {
+            "op": "draw",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "U06",
+      "name": "Iron Skin",
+      "type": "Power",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Guardian",
+      "text": "At the start of each turn, gain 4 block.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "power",
+          "power": "iron_skin",
+          "amount": 4
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Power"
+      ],
+      "balance_other_value": 0,
+      "notes": "Power: per-turn effect",
+      "upgraded": {
+        "text": "At the start of each turn, gain 6 block.",
+        "effects": [
+          {
+            "op": "power",
+            "power": "iron_skin",
+            "amount": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "U07",
+      "name": "Battle Cry",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Brawler",
+      "text": "Gain 2 Strength. Draw 1 card.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "apply_status",
+          "status": "strength",
+          "amount": 2,
+          "target": "self"
+        },
+        {
+          "op": "draw",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Strength"
+      ],
+      "balance_other_value": 0,
+      "notes": "Core Brawler engine",
+      "upgraded": {
+        "text": "Gain 3 Strength. Draw 1 card.",
+        "effects": [
+          {
+            "op": "apply_status",
+            "status": "strength",
+            "amount": 3,
+            "target": "self"
+          },
+          {
+            "op": "draw",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "U08",
+      "name": "Bloodletter",
+      "type": "Attack",
+      "cost": 2,
+      "rarity": "Uncommon",
+      "archetype": "Brawler",
+      "text": "Deal 12 damage. If this kills an enemy, heal 5 HP.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 12,
+          "target": "target",
+          "heal_on_kill": 5
+        }
+      ],
+      "keywords": [
+        "Heal"
+      ],
+      "balance_other_value": 4,
+      "notes": "Other: conditional heal (~half of 5 heal)",
+      "upgraded": {
+        "text": "Deal 15 damage. If this kills an enemy, heal 7 HP.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 15,
+            "target": "target",
+            "heal_on_kill": 7
+          }
+        ]
+      }
+    },
+    {
+      "id": "U09",
+      "name": "Envenom",
+      "type": "Power",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Venom",
+      "text": "Whenever your Attack deals damage, apply 1 Poison.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "power",
+          "power": "envenom",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Poison",
+        "Power"
+      ],
+      "balance_other_value": 5.5,
+      "notes": "PLAYTEST: value depends on attacks per turn",
+      "upgraded": {
+        "text": "Whenever your Attack deals damage, apply 2 Poison.",
+        "effects": [
+          {
+            "op": "power",
+            "power": "envenom",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "U10",
+      "name": "Parry",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Guardian",
+      "text": "Gain 6 block. If the enemy intends to attack, deal 5 damage to it.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 6
+        },
+        {
+          "op": "damage",
+          "amount": 5,
+          "target": "target",
+          "if_intent": "attack"
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Intent"
+      ],
+      "balance_other_value": 3.5,
+      "notes": "Uses enemy intent (Role 1)",
+      "upgraded": {
+        "text": "Gain 8 block. If the enemy intends to attack, deal 8 damage to it.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 8
+          },
+          {
+            "op": "damage",
+            "amount": 8,
+            "target": "target",
+            "if_intent": "attack"
+          }
+        ]
+      }
+    },
+    {
+      "id": "U11",
+      "name": "Reckless Charge",
+      "type": "Attack",
+      "cost": 0,
+      "rarity": "Uncommon",
+      "archetype": "Brawler",
+      "text": "Deal 8 damage. Lose 2 HP.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 8,
+          "target": "target"
+        },
+        {
+          "op": "lose_hp",
+          "amount": 2
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Deal 11 damage. Lose 2 HP.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 11,
+            "target": "target"
+          },
+          {
+            "op": "lose_hp",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "U12",
+      "name": "Quick Thinking",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Tactician",
+      "text": "Draw 3 cards, then discard 1.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "draw",
+          "amount": 3
+        },
+        {
+          "op": "discard",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Discard"
+      ],
+      "balance_other_value": -1,
+      "notes": "Other: discard cost; needs choose-a-card UI (Role 3)",
+      "upgraded": {
+        "text": "Draw 4 cards, then discard 1.",
+        "effects": [
+          {
+            "op": "draw",
+            "amount": 4
+          },
+          {
+            "op": "discard",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "U13",
+      "name": "Bulwark",
+      "type": "Skill",
+      "cost": 2,
+      "rarity": "Uncommon",
+      "archetype": "Guardian",
+      "text": "Gain 10 block. Next turn, gain 5 block.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 10
+        },
+        {
+          "op": "block_next_turn",
+          "amount": 5
+        }
+      ],
+      "keywords": [
+        "Block"
+      ],
+      "balance_other_value": 0,
+      "notes": "Block column = 10 now + 5 next turn",
+      "upgraded": {
+        "text": "Gain 13 block. Next turn, gain 7 block.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 13
+          },
+          {
+            "op": "block_next_turn",
+            "amount": 7
+          }
+        ]
+      }
+    },
+    {
+      "id": "U14",
+      "name": "Catalyst",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Uncommon",
+      "archetype": "Venom",
+      "text": "Double an enemy's Poison. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "multiply_status",
+          "status": "poison",
+          "factor": 2,
+          "target": "target"
+        }
+      ],
+      "keywords": [
+        "Poison",
+        "Exhaust"
+      ],
+      "balance_other_value": 14,
+      "notes": "PLAYTEST: scales with existing Poison",
+      "upgraded": {
+        "text": "Triple an enemy's Poison. Exhaust.",
+        "effects": [
+          {
+            "op": "multiply_status",
+            "status": "poison",
+            "factor": 3,
+            "target": "target"
+          }
+        ]
+      }
+    },
+    {
+      "id": "R01",
+      "name": "Thorn Armor",
+      "type": "Power",
+      "cost": 2,
+      "rarity": "Rare",
+      "archetype": "Guardian",
+      "text": "Whenever you gain block, deal 3 damage to a random enemy.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "power",
+          "power": "thorn_armor",
+          "amount": 3
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Power"
+      ],
+      "balance_other_value": 9.5,
+      "notes": "PLAYTEST: ~2 block cards per turn",
+      "upgraded": {
+        "text": "Whenever you gain block, deal 5 damage to a random enemy.",
+        "effects": [
+          {
+            "op": "power",
+            "power": "thorn_armor",
+            "amount": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "R02",
+      "name": "Adrenaline",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Rare",
+      "archetype": "Tactician",
+      "text": "Gain 2 energy. Draw 1 card. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "gain_energy",
+          "amount": 2
+        },
+        {
+          "op": "draw",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Exhaust"
+      ],
+      "balance_other_value": 0,
+      "notes": "",
+      "upgraded": {
+        "text": "Gain 2 energy. Draw 2 cards. Exhaust.",
+        "effects": [
+          {
+            "op": "gain_energy",
+            "amount": 2
+          },
+          {
+            "op": "draw",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "R03",
+      "name": "Executioner's Axe",
+      "type": "Attack",
+      "cost": 3,
+      "rarity": "Rare",
+      "archetype": "Brawler",
+      "text": "Deal 18 damage. Deals double damage to enemies below half HP.",
+      "exhaust": false,
+      "targets_enemy": true,
+      "effects": [
+        {
+          "op": "damage",
+          "amount": 18,
+          "target": "target",
+          "double_if_below_half": true
+        }
+      ],
+      "keywords": [],
+      "balance_other_value": 7,
+      "notes": "Other: conditional double damage",
+      "upgraded": {
+        "text": "Deal 22 damage. Deals double damage to enemies below half HP.",
+        "effects": [
+          {
+            "op": "damage",
+            "amount": 22,
+            "target": "target",
+            "double_if_below_half": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "R04",
+      "name": "Black Plague",
+      "type": "Power",
+      "cost": 2,
+      "rarity": "Rare",
+      "archetype": "Venom",
+      "text": "At the start of your turn, apply 3 Poison to ALL enemies.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "power",
+          "power": "black_plague",
+          "amount": 3
+        }
+      ],
+      "keywords": [
+        "Poison",
+        "ALL enemies",
+        "Power"
+      ],
+      "balance_other_value": 2.5,
+      "notes": "PLAYTEST: stacking Poison every turn",
+      "upgraded": {
+        "text": "At the start of your turn, apply 4 Poison to ALL enemies.",
+        "effects": [
+          {
+            "op": "power",
+            "power": "black_plague",
+            "amount": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "R05",
+      "name": "Phoenix Feather",
+      "type": "Skill",
+      "cost": 1,
+      "rarity": "Rare",
+      "archetype": "Neutral",
+      "text": "Gain 5 block. Heal 7 HP. Exhaust.",
+      "exhaust": true,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "block",
+          "amount": 5
+        },
+        {
+          "op": "heal",
+          "amount": 7
+        }
+      ],
+      "keywords": [
+        "Block",
+        "Heal",
+        "Exhaust"
+      ],
+      "balance_other_value": 0,
+      "notes": "Best heal in the set",
+      "upgraded": {
+        "text": "Gain 7 block. Heal 10 HP. Exhaust.",
+        "effects": [
+          {
+            "op": "block",
+            "amount": 7
+          },
+          {
+            "op": "heal",
+            "amount": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "R06",
+      "name": "Berserker Rage",
+      "type": "Power",
+      "cost": 1,
+      "rarity": "Rare",
+      "archetype": "Brawler",
+      "text": "Gain 1 extra energy at the start of each turn.",
+      "exhaust": false,
+      "targets_enemy": false,
+      "effects": [
+        {
+          "op": "power",
+          "power": "berserker_rage",
+          "amount": 1
+        }
+      ],
+      "keywords": [
+        "Power"
+      ],
+      "balance_other_value": 0,
+      "notes": "Energy engines are the strongest effect; watch closely",
+      "upgraded": {
+        "text": "Costs 0. Gain 1 extra energy at the start of each turn.",
+        "effects": [
+          {
+            "op": "power",
+            "power": "berserker_rage",
+            "amount": 1
+          }
+        ],
+        "cost": 0
+      }
+    }
+  ]
+}
