@@ -1,0 +1,9 @@
+# Godot generated files
+.godot/
+
+# Temporary files
+*.tmp
+
+# Windows files
+Thumbs.db
+.DS_Store
