@@ -1,0 +1,217 @@
+{
+ "S01": {
+  "value": 6,
+  "budget": 9,
+  "status": "Starter (under on purpose)"
+ },
+ "S02": {
+  "value": 6,
+  "budget": 9,
+  "status": "Starter (under on purpose)"
+ },
+ "S03": {
+  "value": 8,
+  "budget": 9,
+  "status": "Starter (under on purpose)"
+ },
+ "C01": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C02": {
+  "value": 3,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C03": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C04": {
+  "value": 15,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "C05": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C06": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C07": {
+  "value": 8.8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C08": {
+  "value": 3,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C09": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C10": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C11": {
+  "value": 8.4,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C12": {
+  "value": 14.4,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "C13": {
+  "value": 8.8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C14": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C15": {
+  "value": 10.8,
+  "budget": 11.7,
+  "status": "Balanced"
+ },
+ "C16": {
+  "value": 8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C17": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C18": {
+  "value": 3,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C19": {
+  "value": 4,
+  "budget": 3.9,
+  "status": "Balanced"
+ },
+ "C20": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "U01": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U02": {
+  "value": 16.4,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U03": {
+  "value": 16.5,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U04": {
+  "value": 15.75,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U05": {
+  "value": 6,
+  "budget": 6.5,
+  "status": "Balanced"
+ },
+ "U06": {
+  "value": 9.6,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U07": {
+  "value": 12,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U08": {
+  "value": 16,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U09": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U10": {
+  "value": 10.7,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U11": {
+  "value": 5,
+  "budget": 5,
+  "status": "Balanced"
+ },
+ "U12": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U13": {
+  "value": 18,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U14": {
+  "value": 14,
+  "budget": 14.3,
+  "status": "Balanced"
+ },
+ "R01": {
+  "value": 19,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R02": {
+  "value": 16,
+  "budget": 16.9,
+  "status": "Balanced"
+ },
+ "R03": {
+  "value": 25,
+  "budget": 25,
+  "status": "Balanced"
+ },
+ "R04": {
+  "value": 18.5,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R05": {
+  "value": 16.5,
+  "budget": 16.9,
+  "status": "Balanced"
+ },
+ "R06": {
+  "value": 12,
+  "budget": 13,
+  "status": "Balanced"
+ }
+}
