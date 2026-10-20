@@ -14,15 +14,34 @@ extends RefCounted
 ##   combat.end_player_turn()                    # enemies act, next turn starts
 ##   if combat.result == CombatState.RESULT_WON: ...
 ##
-## Turn order
-##   Player turn start: lose all block -> Poison ticks -> energy refills
-##     (+Berserker Rage) -> Bulwark's delayed block -> Iron Skin block ->
-##     Black Plague poisons all enemies -> draw 5.
-##   Player turn end: discard hand, Sharpen bonus expires, Weak/Vulnerable -1.
-##   Each enemy: lose block -> Poison ticks -> act on its intent.
-##   Then every enemy's Weak/Vulnerable -1 and it shows its next intent.
+## Animating the enemy turn (UI): set manual_enemy_turn = true before start().
+## end_player_turn() then stops at the start of the enemy turn, and the UI
+## steps through it one enemy at a time:
+##   combat.end_player_turn()
+##   while combat.next_enemy_action():   # one enemy acts per call
+##       await play_enemy_animation()    # listen to enemy_acted / damage_dealt
+## The last call ends the round and starts the player's next turn.
+##
+## A round
+##   1. Player turn start: lose all block -> Poison ticks -> energy refills
+##      (+Berserker Rage) -> Bulwark's delayed block -> Iron Skin block ->
+##      Black Plague poisons all enemies -> draw 5.          [turn_started]
+##   2. Player plays cards.
+##   3. Player turn end: discard hand, Sharpen bonus expires. [player_turn_ended]
+##   4. Enemy turn, one enemy at a time:                      [enemy_turn_started]
+##      lose block -> Poison ticks -> act on its intent.     [enemy_acted]
+##   5. Round end: everyone's Weak/Vulnerable -1 (ones an enemy applied this
+##      round skip this countdown), enemies show their next intent. [round_ended]
 
+enum Phase { NOT_STARTED, PLAYER_TURN, ENEMY_TURN, OVER }
+
+signal phase_changed(phase: Phase)
 signal turn_started(turn: int)
+signal player_turn_ended(turn: int)
+signal enemy_turn_started(turn: int)
+## intent is the action the enemy just took (its next one is current_intent()).
+signal enemy_acted(enemy: Enemy, intent: Dictionary)
+signal round_ended(turn: int)
 signal energy_changed(energy: int)
 signal card_played(card: CardInstance, target: Enemy)
 signal card_rejected(card: CardInstance, reason: String)
@@ -50,7 +69,17 @@ var rng: RandomNumberGenerator
 var turn: int = 0
 var energy: int = 0
 var result: String = RESULT_NONE
-var is_player_turn: bool = false
+var phase: Phase = Phase.NOT_STARTED
+## True only during the player's turn (kept for older code; prefer `phase`).
+var is_player_turn: bool:
+	get:
+		return phase == Phase.PLAYER_TURN
+
+## When true, end_player_turn() waits for the UI to call next_enemy_action()
+## for each enemy. When false (tests, simulation), the whole enemy turn runs at once.
+var manual_enemy_turn: bool = false
+## Enemies that still have to act this enemy turn, in order.
+var _enemy_queue: Array[Enemy] = []
 
 ## Active powers: power id -> total amount (playing the same power twice stacks).
 var powers: Dictionary = {}
@@ -82,7 +111,9 @@ func start(deck: Deck, player_hp: int, p_enemies: Array, p_rng: RandomNumberGene
 	next_attack_bonus = 0
 	pending_block_next_turn = 0
 	pending_discards = 0
-	start_player_turn()
+	_enemy_queue.clear()
+	phase = Phase.NOT_STARTED
+	_start_player_turn()
 
 
 func is_over() -> bool:
@@ -103,11 +134,11 @@ func get_power(power_id: String) -> int:
 
 # ---------------------------------------------------------------- turns
 
-func start_player_turn() -> void:
+func _start_player_turn() -> void:
 	if is_over():
 		return
 	turn += 1
-	is_player_turn = true
+	_set_phase(Phase.PLAYER_TURN)
 	player.clear_block()
 	player.tick_poison()
 	if _check_end():
@@ -127,45 +158,100 @@ func start_player_turn() -> void:
 	_log("Turn %d: %d energy, %d cards in hand" % [turn, energy, piles.hand.size()])
 
 
-func end_player_turn() -> void:
-	if is_over() or not is_player_turn or pending_discards > 0:
-		return
-	is_player_turn = false
+## Why the player can't end the turn right now, or "" if they can.
+## Use it to grey out the End Turn button.
+func why_cannot_end_turn() -> String:
+	if is_over():
+		return "The fight is over."
+	if phase != Phase.PLAYER_TURN:
+		return "It's not your turn."
+	if pending_discards > 0:
+		return "Choose a card to discard first."
+	return ""
+
+
+func can_end_turn() -> bool:
+	return why_cannot_end_turn() == ""
+
+
+## Ends the player's turn and starts the enemy turn. Unless manual_enemy_turn
+## is set, the enemies all act and the next player turn starts before this
+## returns. Returns false (and does nothing) if the turn can't end yet.
+func end_player_turn() -> bool:
+	if not can_end_turn():
+		return false
 	piles.discard_hand()
 	next_attack_bonus = 0
-	player.decrement_turn_statuses()
-	_run_enemy_turns()
-	if not is_over():
-		start_player_turn()
+	player_turn_ended.emit(turn)
+	_start_enemy_turn()
+	if not manual_enemy_turn:
+		while next_enemy_action():
+			pass
+	return true
 
 
-func _run_enemy_turns() -> void:
-	for e in living_enemies():
+func _start_enemy_turn() -> void:
+	_set_phase(Phase.ENEMY_TURN)
+	_enemy_queue = living_enemies()
+	enemy_turn_started.emit(turn)
+
+
+## One step of the enemy turn: the next living enemy loses its block, takes
+## Poison, and (if it survives) does its intent. Returns true after an enemy
+## takes its step, so call it again. When no enemies are left to act, it ends
+## the round, starts the player's next turn and returns false. Also returns
+## false if it isn't the enemy turn or the fight ended.
+func next_enemy_action() -> bool:
+	if phase != Phase.ENEMY_TURN:
+		return false
+	while not _enemy_queue.is_empty():
+		var e: Enemy = _enemy_queue.pop_front()
+		if not e.is_alive():
+			continue
 		e.clear_block()
 		e.tick_poison()
 		if _check_end():
-			return
+			return false
 		if e.is_alive():
-			_do_intent(e)
+			var intent := e.current_intent()
+			_do_intent(e, intent)
+			enemy_acted.emit(e, intent)
 			if _check_end():
-				return
+				return false
+		return true
+	_end_round()
+	return false
+
+
+func _end_round() -> void:
 	for e in living_enemies():
 		e.decrement_turn_statuses()
 		e.advance_intent()
+	player.decrement_turn_statuses()
+	round_ended.emit(turn)
+	_start_player_turn()
 
 
-func _do_intent(e: Enemy) -> void:
-	var intent := e.current_intent()
+func _do_intent(e: Enemy, intent: Dictionary) -> void:
+	var amount := int(intent.get("amount", 0))
 	match intent.get("type", ""):
 		Enemy.INTENT_ATTACK:
-			for i in int(intent.get("hits", 1)):
-				deal_attack_damage(e, player, int(intent.get("amount", 0)), 0)
+			var hits := int(intent.get("hits", 1))
+			_log("%s attacks for %d%s" % [e.display_name, amount, " x%d" % hits if hits > 1 else ""])
+			for i in hits:
+				deal_attack_damage(e, player, amount, 0)
 		Enemy.INTENT_BLOCK:
-			e.gain_block(int(intent.get("amount", 0)))
+			_log("%s blocks %d" % [e.display_name, amount])
+			e.gain_block(amount)
 		Enemy.INTENT_BUFF:
-			e.add_status(intent.get("status", Combatant.STRENGTH), int(intent.get("amount", 0)))
+			var status: String = intent.get("status", Combatant.STRENGTH)
+			_log("%s gains %d %s" % [e.display_name, amount, status])
+			e.add_status(status, amount, true)
 		Enemy.INTENT_DEBUFF:
-			player.add_status(intent.get("status", Combatant.WEAK), int(intent.get("amount", 0)))
+			var status: String = intent.get("status", Combatant.WEAK)
+			_log("%s applies %d %s" % [e.display_name, amount, status])
+			# Applied during the enemy turn, so it skips this round's countdown.
+			player.add_status(status, amount, true)
 
 
 # ---------------------------------------------------------------- playing cards
@@ -174,7 +260,7 @@ func _do_intent(e: Enemy) -> void:
 func why_cannot_play(card: CardInstance, target_index: int = -1) -> String:
 	if is_over():
 		return "The fight is over."
-	if not is_player_turn:
+	if phase != Phase.PLAYER_TURN:
 		return "It's not your turn."
 	if pending_discards > 0:
 		return "Choose a card to discard first."
@@ -308,9 +394,17 @@ func _check_end() -> bool:
 
 func _finish(r: String) -> void:
 	result = r
-	is_player_turn = false
+	_enemy_queue.clear()
+	_set_phase(Phase.OVER)
 	_log("Combat %s on turn %d" % [r, turn])
 	combat_ended.emit(r)
+
+
+func _set_phase(p: Phase) -> void:
+	if phase == p:
+		return
+	phase = p
+	phase_changed.emit(p)
 
 
 func _log(msg: String) -> void:
