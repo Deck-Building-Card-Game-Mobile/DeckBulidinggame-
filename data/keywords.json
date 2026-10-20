@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "keywords": [
+    {
+      "keyword": "Block",
+      "rule": "Prevents damage. All block is removed at the start of your next turn.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Heal",
+      "rule": "Restore HP, up to max HP.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Poison",
+      "rule": "At the start of the poisoned creature's turn, it loses HP equal to its Poison, then Poison goes down by 1.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Weak",
+      "rule": "Deals 25% less attack damage. Lasts the listed number of turns.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Vulnerable",
+      "rule": "Takes 50% more attack damage. Lasts the listed number of turns.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Strength",
+      "rule": "Each attack hit deals +1 damage per Strength. Lasts the whole fight.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Exhaust",
+      "rule": "After playing, remove this card from your deck for the rest of the fight (it returns next fight).",
+      "implemented_by": "Role 2"
+    },
+    {
+      "keyword": "Power",
+      "rule": "Stays in play for the rest of the fight instead of going to the discard pile.",
+      "implemented_by": "Role 2"
+    },
+    {
+      "keyword": "ALL enemies",
+      "rule": "Hits every enemy in the fight.",
+      "implemented_by": "Role 1"
+    },
+    {
+      "keyword": "Intent",
+      "rule": "Enemies show what they'll do next turn. Some cards (Parry) check it.",
+      "implemented_by": "Role 1 + Role 3"
+    },
+    {
+      "keyword": "Discard",
+      "rule": "Choose a card from your hand to put in the discard pile.",
+      "implemented_by": "Role 2 + Role 3"
+    }
+  ]
+}

@@ -1,12 +1,4 @@
 # DeckBulidinggame-
-A mobile, single-player deck-building card game with quick 5-minute matches against AI, built for casual players.
-A mobile, deck-building app for the game Magic: the Gathering with a play-test feature against AI.
-
-
-
-
-Using Scryfall's open source database.
-
 
 DUNGEON ROGUELIKE DECK-BUILDING GAME
 FOUR-PERSON TEAM ROLES AND RESPONSIBILITIES
@@ -81,3 +73,10 @@ HOW THE ROLES WORK TOGETHER
 - Role 1 applies the effect and updates the battle state.
 - Role 4 advances the run when a battle ends and coordinates rewards.
 - All four members contribute code, tests, documentation, GitHub updates, and integration support.
+
+CARD SYSTEM
+The 43-card set, rules and keywords from docs/design/Dungeon_Card_Set_v1.xlsx are built in as
+data (data/*.json) and GDScript (scripts/cards, scripts/combat). See docs/CARD_SYSTEM.md for how
+each role uses it. Run the tests with:
+  godot --headless --path . --import
+  godot --headless --path . --script res://tests/run_tests.gd
