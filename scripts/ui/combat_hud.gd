@@ -4,6 +4,8 @@ extends Control
 # Combat HUD for Dungeon Deck.
 # Uses the existing card and combat systems.
 
+const CARD_UI_SCENE: PackedScene = preload("res://scenes/ui/card_ui.tscn")
+
 @onready var player_health_label: Label = $PlayerPanel/PlayerInfo/HealthLabel
 @onready var player_block_label: Label = $PlayerPanel/PlayerInfo/BlockLabel
 @onready var energy_label: Label = $PlayerPanel/PlayerInfo/EnergyLabel
@@ -24,7 +26,7 @@ var selected_enemy_index: int = 0
 func _ready() -> void:
 	print("Combat HUD loaded successfully!")
 
-	# Remove the temporary card buttons.
+	# Remove temporary cards from the scene.
 	for child in card_hand.get_children():
 		card_hand.remove_child(child)
 		child.queue_free()
@@ -95,7 +97,6 @@ func _refresh_hud() -> void:
 	if not combat.enemies.is_empty():
 		var enemy: Enemy = combat.enemies[selected_enemy_index]
 
-		# Combatant uses display_name, not name.
 		enemy_title.text = enemy.display_name
 
 		enemy_health_label.text = "HP: %d / %d" % [
@@ -159,7 +160,7 @@ func _format_enemy_intent(intent: Dictionary) -> String:
 
 
 func _refresh_card_hand() -> void:
-	# Remove previously generated card buttons.
+	# Remove previously generated cards.
 	for child in card_hand.get_children():
 		card_hand.remove_child(child)
 		child.queue_free()
@@ -173,40 +174,30 @@ func _refresh_card_hand() -> void:
 	else:
 		hand_title.text = "YOUR HAND"
 
-	# Create buttons from actual cards in the player's hand.
+	# Create reusable Card UI instances.
 	for card in combat.piles.hand:
-		var card_button := Button.new()
+		var card_ui: Button = CARD_UI_SCENE.instantiate()
 
-		card_button.custom_minimum_size = Vector2(140, 135)
+		card_hand.add_child(card_ui)
 
-		card_button.text = "%s\nCost: %d\n%s" % [
-			card.get_name(),
-			card.get_cost(),
-			card.get_text()
-		]
-
-		card_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		card_button.clip_text = true
+		# Pass the actual card instance to its UI component.
+		card_ui.setup(card)
 
 		# Enable cards based on available energy and targeting.
 		if combat.pending_discards > 0:
-			card_button.disabled = false
+			card_ui.disabled = false
 		else:
 			var target_index: int = (
 				selected_enemy_index if card.targets_enemy() else -1
 			)
 
-			card_button.disabled = not combat.can_play(
+			card_ui.disabled = not combat.can_play(
 				card,
 				target_index
 			)
 
-		# Connect each card button to the correct card instance.
-		card_button.pressed.connect(
-			_on_card_pressed.bind(card)
-		)
-
-		card_hand.add_child(card_button)
+		# Connect the reusable component's selection signal.
+		card_ui.card_selected.connect(_on_card_pressed)
 
 
 func _on_card_pressed(card: CardInstance) -> void:
