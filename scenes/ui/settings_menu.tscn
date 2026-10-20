@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://k3wr7i5hac8j"]
+
+[ext_resource type="Script" uid="uid://dgud4dxemmcu6" path="res://scripts/ui/settings_menu.gd" id="1_script"]
+
+[node name="SettingsMenu" type="Control" unique_id=30411519]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=279009953]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=73858761]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=528141420]
+layout_mode = 2
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="MasterLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=533247878]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterVolume" type="HSlider" parent="CenterContainer/VBoxContainer" unique_id=79730796]
+custom_minimum_size = Vector2(250, 40)
+layout_mode = 2
+value = 100.0
+
+[node name="MusicLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=994447525]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="MusicVolume" type="HSlider" parent="CenterContainer/VBoxContainer" unique_id=1698957316]
+custom_minimum_size = Vector2(250, 40)
+layout_mode = 2
+value = 100.0
+
+[node name="SFXLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1221619330]
+layout_mode = 2
+text = "Sound Effects"
+
+[node name="SFXVolume" type="HSlider" parent="CenterContainer/VBoxContainer" unique_id=524206498]
+custom_minimum_size = Vector2(250, 40)
+layout_mode = 2
+value = 100.0
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1436196292]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "Back"
+
+[connection signal="value_changed" from="CenterContainer/VBoxContainer/MasterVolume" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="CenterContainer/VBoxContainer/MusicVolume" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="CenterContainer/VBoxContainer/SFXVolume" to="." method="_on_sfx_volume_changed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/BackButton" to="." method="_on_back_pressed"]
