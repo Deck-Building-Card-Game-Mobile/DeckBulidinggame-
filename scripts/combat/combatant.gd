@@ -14,7 +14,7 @@ const WEAK := "weak"
 const VULNERABLE := "vulnerable"
 const STRENGTH := "strength"
 
-## Statuses that count down by 1 at the end of their owner's turn.
+## Statuses that count down by 1 at the end of each round (after the enemies act).
 const TURN_STATUSES := [WEAK, VULNERABLE]
 
 var display_name: String
@@ -22,6 +22,10 @@ var max_hp: int
 var hp: int
 var block: int = 0
 var statuses: Dictionary = {}
+## Turn statuses that skip their next countdown because they were applied
+## during the enemy turn (so 1 Vulnerable from an enemy still lasts through
+## the next enemy turn). status -> true.
+var _skip_countdown: Dictionary = {}
 
 
 func _init(p_name: String = "", p_max_hp: int = 1, p_hp: int = -1) -> void:
@@ -46,8 +50,12 @@ func has_status(status: String) -> bool:
 	return get_status(status) > 0
 
 
-func add_status(status: String, amount: int) -> void:
+## skip_next_countdown: true when the status lands during the enemy turn, so
+## Weak / Vulnerable aren't counted down at the end of that same round.
+func add_status(status: String, amount: int, skip_next_countdown: bool = false) -> void:
 	set_status(status, get_status(status) + amount)
+	if skip_next_countdown and status in TURN_STATUSES and has_status(status):
+		_skip_countdown[status] = true
 
 
 func set_status(status: String, amount: int) -> void:
@@ -56,6 +64,7 @@ func set_status(status: String, amount: int) -> void:
 		amount = 0
 	if amount == 0:
 		statuses.erase(status)
+		_skip_countdown.erase(status)
 	else:
 		statuses[status] = amount
 	status_changed.emit(status, amount)
@@ -121,8 +130,13 @@ func tick_poison() -> int:
 	return lost
 
 
-## End of this combatant's turn: Weak and Vulnerable go down by 1.
+## End of the round: Weak and Vulnerable go down by 1, except ones applied
+## during this round's enemy turn, which skip this countdown once.
 func decrement_turn_statuses() -> void:
 	for s in TURN_STATUSES:
-		if has_status(s):
+		if not has_status(s):
+			continue
+		if _skip_countdown.has(s):
+			_skip_countdown.erase(s)
+		else:
 			set_status(s, get_status(s) - 1)
