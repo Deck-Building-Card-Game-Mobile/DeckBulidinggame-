@@ -13,7 +13,7 @@ it is all plain classes, so it works the same from UI, tests or a bot.
 | `data/keywords.json` | Rules text for tap-to-explain | Role 2 / 3 |
 | `scripts/cards/` | `CardData`, `CardDatabase`, `CardInstance`, `Deck`, `CardPiles`, `RewardGenerator`, `BalanceCalculator`, `Keywords`, `GameRules` | Role 2 |
 | `scripts/combat/` | `Combatant`, `Enemy`, `CombatState`, `EffectResolver` | Role 1 (with Role 2) |
-| `tests/` | Headless tests (74) | everyone |
+| `tests/` | Headless tests (86) | everyone |
 | `tools/export_expected_balance.py` | Copies the sheet's balance results into the tests | Role 2 |
 
 `data/cards.json` is the source of truth for the game. The spreadsheet stays
@@ -79,6 +79,23 @@ Signals for feedback and animation: `turn_started`, `energy_changed`,
 `hp_changed`, `block_changed` and `status_changed` on every `Combatant`, and
 `hand_changed` on `combat.piles`.
 
+Turn flow signals: `phase_changed(phase)`, `player_turn_ended(turn)`,
+`enemy_turn_started(turn)`, `enemy_acted(enemy, intent)` and `round_ended(turn)`.
+`combat.phase` is `PLAYER_TURN`, `ENEMY_TURN` or `OVER`. Grey out the End Turn
+button with `combat.can_end_turn()` (reason: `why_cannot_end_turn()`).
+
+To animate the enemy turn one enemy at a time, set
+`combat.manual_enemy_turn = true` before `start()`, then:
+
+```gdscript
+combat.end_player_turn()
+while combat.next_enemy_action():     # one enemy acts per call
+    await play_enemy_animation()      # use enemy_acted / damage_dealt
+# the last call ended the round and started the player's next turn
+```
+
+Without it (tests, simulation), `end_player_turn()` runs the whole enemy turn at once.
+
 Quick Thinking is the only card that needs a choice: on `discard_requested(count)`,
 let the player tap cards and call `combat.choose_discard(card)` for each.
 Playing cards and ending the turn are blocked until that's done.
@@ -102,9 +119,13 @@ Change them in one place if the team disagrees.
 
 - **Turn order:** at the start of your turn you lose your block, Poison ticks,
   energy refills, then Bulwark / Iron Skin block, Black Plague, and you draw 5.
-  Enemies lose their block and take Poison at the start of their own turn.
-- **Weak / Vulnerable** go down by 1 at the end of their owner's turn, so
-  1 Vulnerable on an enemy lasts for the rest of your turn.
+  Enemies act one at a time in order; each loses its block and takes Poison
+  right before it acts, and an enemy killed by Poison doesn't act.
+- **Weak / Vulnerable** go down by 1 at the end of each round, after the
+  enemies act. 1 Vulnerable you put on an enemy lasts for the rest of your turn
+  and its turn. One an enemy puts on you skips that round's countdown, so
+  1 Vulnerable from an enemy lasts through its next attack and 1 Weak lasts for
+  your next turn. (Before this rule, 1 Vulnerable from an enemy did nothing.)
 - **Damage** = (base + Strength + Sharpen) x 0.75 if Weak x 1.5 if Vulnerable,
   rounded down. Poison and Thorn Armor ignore Strength, Weak and Vulnerable.
   Poison and Reckless Charge ignore block.
