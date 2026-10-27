@@ -1,3 +1,4 @@
+
 class_name CardPiles
 extends RefCounted
 ## The card zones during one fight (Role 2): draw pile, hand, discard pile,
@@ -48,21 +49,26 @@ func reshuffle_discard_into_draw() -> void:
 
 
 ## Draws up to `count` cards. If the draw pile runs out, the discard pile is
-## shuffled in. If the hand is full, extra drawn cards go straight to the
-## discard pile. Returns the cards that reached the hand.
+## shuffled in. Stops drawing when the hand reaches its maximum size.
+## Cards that cannot fit remain in the draw pile for future turns.
+## Returns the cards that reached the hand.
 func draw(count: int) -> Array[CardInstance]:
 	var drawn: Array[CardInstance] = []
 	for i in count:
+		# NEW: Stop drawing when the hand is full.
+		# Do not send extra cards to the discard pile.
+		if hand.size() >= max_hand_size:
+			break
+
 		if draw_pile.is_empty():
 			if discard_pile.is_empty():
 				break
 			reshuffle_discard_into_draw()
+
 		var card: CardInstance = draw_pile.pop_back()
-		if hand.size() >= max_hand_size:
-			discard_pile.append(card)
-		else:
-			hand.append(card)
-			drawn.append(card)
+		hand.append(card)
+		drawn.append(card)
+
 	if not drawn.is_empty():
 		hand_changed.emit()
 	return drawn
@@ -86,6 +92,8 @@ func discard_from_hand(card: CardInstance) -> bool:
 
 
 ## End of turn: the whole hand goes to the discard pile.
+## NOTE: This function is retained for compatibility with existing code.
+## The updated CombatState will no longer call it automatically each turn.
 func discard_hand() -> void:
 	discard_pile.append_array(hand)
 	hand.clear()
