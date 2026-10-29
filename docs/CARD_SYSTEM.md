@@ -1,8 +1,14 @@
 # Card System
 
-The 43 cards, rules and keywords from `docs/design/Dungeon_Card_Set_v1.xlsx`,
-built into the game as data plus GDScript. Nothing here needs a scene to run;
+The 128-card alpha set, rules and keywords from
+`docs/design/Dungeon_Card_Set_Alpha_128.xlsx`, built into the game as data plus
+GDScript. (`Dungeon_Card_Set_v1.xlsx` is the original 43-card set, kept for
+reference; those 43 cards are unchanged in the alpha set.) Nothing here needs a scene to run;
 it is all plain classes, so it works the same from UI, tests or a bot.
+
+**Alpha set:** 3 Starter, 55 Common, 40 Uncommon, 22 Rare, 8 Legendary.
+Legendaries are **Unique** (one copy per deck), drop 2% of the time in normal
+rewards, and one is always offered after elites and the boss.
 
 ## Files
 
@@ -13,7 +19,7 @@ it is all plain classes, so it works the same from UI, tests or a bot.
 | `data/keywords.json` | Rules text for tap-to-explain | Role 2 / 3 |
 | `scripts/cards/` | `CardData`, `CardDatabase`, `CardInstance`, `Deck`, `CardPiles`, `RewardGenerator`, `BalanceCalculator`, `Keywords`, `GameRules` | Role 2 |
 | `scripts/combat/` | `Combatant`, `Enemy`, `CombatState`, `EffectResolver` | Role 1 (with Role 2) |
-| `tests/` | Headless tests (86) | everyone |
+| `tests/` | Headless tests (121) | everyone |
 | `tools/export_expected_balance.py` | Copies the sheet's balance results into the tests | Role 2 |
 
 `data/cards.json` is the source of truth for the game. The spreadsheet stays
@@ -46,8 +52,12 @@ combat.start(deck, hp, [Enemy.new("Cave Rat", 22, [{"type": "attack", "amount": 
 func _on_battle_ended(result: String) -> void:
     hp = combat.player.hp
     if result == CombatState.RESULT_WON:
-        var choices := RewardGenerator.generate_choices(rng)   # 3 CardData, skippable
+        # 3 CardData, skippable. Pass the deck so owned Legendaries aren't offered.
+        var choices := RewardGenerator.generate_choices(rng, -1, deck)
+        # Elite or boss fight: one of the 3 is always a Legendary
+        # var choices := RewardGenerator.generate_choices(rng, -1, deck, true)
         # after the player picks: deck.add_card(choices[i].id)
+        # add_card returns null if it's a Unique card the deck already has
 
 # Rest site / shop
 deck.upgrade_card(card)       # or deck.remove_card(card)
@@ -96,7 +106,11 @@ while combat.next_enemy_action():     # one enemy acts per call
 
 Without it (tests, simulation), `end_player_turn()` runs the whole enemy turn at once.
 
-Quick Thinking is the only card that needs a choice: on `discard_requested(count)`,
+Unbreakable makes the player Invulnerable until their next turn: show it with
+`combat.player.invulnerable` / the `invulnerable_changed` signal. Retain cards stay
+in `combat.piles.hand` at the end of the turn, so the hand doesn't always start empty.
+
+Quick Thinking and Sift are the cards that need a choice: on `discard_requested(count)`,
 let the player tap cards and call `combat.choose_discard(card)` for each.
 Playing cards and ending the turn are blocked until that's done.
 
@@ -105,7 +119,9 @@ order, energy, block, statuses, powers and win/lose so every card works.
 Enemy content and smarter AI still need to be designed: an enemy is currently a
 repeating list of intents (`attack`, `block`, `buff`, `debuff`).
 
-**Role 2 (cards)**: to add a card, add an object to `data/cards.json`
+**Role 2 (cards)**: card flags are `exhaust`, `retain` and `unique` (and
+`upgraded.exhaust` when the upgrade removes Exhaust, like Limit Break+). To add
+a card, add an object to `data/cards.json`
 using the existing effect ops (the list is at the top of
 `scripts/combat/effect_resolver.gd`), add the row to the sheet, run
 `tools/export_expected_balance.py`, and add a test in
@@ -135,6 +151,22 @@ Change them in one place if the team disagrees.
 - **Hand limit** is 10. Cards drawn with a full hand go to the discard pile.
 - **Exhaust** removes a card for that fight only; the run deck is never changed by a fight.
 - **Powers** stack if you play two of the same.
+- **Retain** cards stay in your hand at end of turn and still count toward the
+  10-card hand limit. Master Plan keeps the whole hand.
+- **Unique:** `Deck.add_card` refuses a second copy, and rewards skip Uniques
+  you already own. If every Legendary is owned, an elite reward offers 3 normal cards.
+- **Malignancy** adds its +1 to every Poison you apply: cards, Envenom and
+  Black Plague. Doubling or tripling Poison (Catalyst, Pandemic) isn't "applying".
+- **Avatar of Rage** doubles damage from Attack cards only (not Parry or Thorn Armor),
+  and its HP loss happens at the start of your turn, after Poison.
+- **Echo Strike:** the next Attack resolves twice; Sharpen's bonus applies only
+  to the first. Unused echoes end with the turn.
+- **Unbreakable / Invulnerable** stops all damage (block isn't used up) until
+  the start of your next turn. It doesn't stop HP loss from your own cards or Poison.
+- **Chronomancer's Hourglass:** the enemies skip their turn and the round
+  doesn't end, so Weak/Vulnerable don't count down and intents don't change.
+- **Barricade / Eternal Bulwark:** block is kept between turns; attacks still use it up.
+- **Heart of the Hydra:** Poison on enemies still deals damage every turn but never goes down.
 
 ## Balance note
 

@@ -117,7 +117,7 @@ func test_played_card_destinations() -> void:
 
 func test_rewards() -> void:
 	var rng := _seeded(7)
-	var counts := {"Common": 0, "Uncommon": 0, "Rare": 0}
+	var counts := {"Common": 0, "Uncommon": 0, "Rare": 0, "Legendary": 0}
 	for i in 3000:
 		var choices := RewardGenerator.generate_choices(rng)
 		check_eq(choices.size(), 3)
@@ -127,5 +127,55 @@ func test_rewards() -> void:
 			counts[c.rarity] += 1
 	var total := 9000.0
 	check(absf(counts["Common"] / total - 0.60) < 0.03, "common rate %s" % (counts["Common"] / total))
-	check(absf(counts["Uncommon"] / total - 0.33) < 0.03, "uncommon rate %s" % (counts["Uncommon"] / total))
+	check(absf(counts["Uncommon"] / total - 0.31) < 0.03, "uncommon rate %s" % (counts["Uncommon"] / total))
 	check(absf(counts["Rare"] / total - 0.07) < 0.02, "rare rate %s" % (counts["Rare"] / total))
+	check(absf(counts["Legendary"] / total - 0.02) < 0.01, "legendary rate %s" % (counts["Legendary"] / total))
+
+
+func test_unique_cards_limited_to_one_copy() -> void:
+	var deck := Deck.create_starter()
+	check(deck.add_card("L01") != null)
+	check(deck.add_card("L01") == null, "second Legendary copy refused")
+	check_eq(deck.count_of("L01"), 1)
+	check(not deck.can_add_card("L01"))
+	check(deck.can_add_card("L02"))
+	check(deck.add_card("C01") != null and deck.add_card("C01") != null, "normal cards can repeat")
+
+
+func test_rewards_skip_owned_legendaries() -> void:
+	var deck := Deck.create_starter()
+	for c in CardDatabase.get_cards_by_rarity("Legendary"):
+		if c.id != "L05":
+			deck.add_card(c.id)
+	var rng := _seeded(9)
+	for i in 300:
+		var choices := RewardGenerator.generate_choices(rng, -1, deck, true)
+		check_eq(choices[0].id, "L05", "only Legendary left to offer")
+		for c in choices.slice(1):
+			check(not c.is_legendary(), "owned Legendary offered")
+
+
+func test_elite_reward_guarantees_a_legendary() -> void:
+	var rng := _seeded(10)
+	for i in 200:
+		var choices := RewardGenerator.generate_choices(rng, -1, Deck.create_starter(), true)
+		check_eq(choices.size(), 3)
+		check(choices[0].is_legendary())
+	var deck := Deck.create_starter()
+	for c in CardDatabase.get_cards_by_rarity("Legendary"):
+		deck.add_card(c.id)
+	var fallback := RewardGenerator.generate_choices(rng, -1, deck, true)
+	check_eq(fallback.size(), 3, "still 3 choices when every Legendary is owned")
+
+
+func test_retain_cards_stay_in_hand() -> void:
+	var piles := CardPiles.new()
+	var keep := CardInstance.new("C33")   # Hunker Down: Retain
+	var normal := CardInstance.new("S01")
+	piles.hand.append(keep)
+	piles.hand.append(normal)
+	piles.discard_hand()
+	check_eq(piles.hand, [keep] as Array[CardInstance])
+	check(piles.discard_pile.has(normal))
+	piles.discard_hand(true)
+	check(piles.hand.has(keep), "retain_all keeps everything")

@@ -1,7 +1,7 @@
 """Copy each card's Value / Budget / Status from the design spreadsheet into
 tests/expected_balance.json, so the Godot tests check the code against the sheet.
 
-Run after changing numbers in docs/design/Dungeon_Card_Set_v1.xlsx
+Run after changing numbers in docs/design/Dungeon_Card_Set_Alpha_128.xlsx
 (save the sheet in Excel, LibreOffice or Google Sheets first so formulas
 have calculated values):
 
@@ -14,7 +14,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parent.parent
-SHEET = ROOT / "docs" / "design" / "Dungeon_Card_Set_v1.xlsx"
+SHEET = ROOT / "docs" / "design" / "Dungeon_Card_Set_Alpha_128.xlsx"
 OUT = ROOT / "tests" / "expected_balance.json"
 
 ws = load_workbook(SHEET, data_only=True)["Cards"]

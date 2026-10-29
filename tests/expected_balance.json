@@ -114,6 +114,181 @@
   "budget": 9,
   "status": "Balanced"
  },
+ "C21": {
+  "value": 8.6,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C22": {
+  "value": 9.6,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C23": {
+  "value": 11.5,
+  "budget": 11.7,
+  "status": "Balanced"
+ },
+ "C24": {
+  "value": 15,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "C25": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C26": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C27": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C28": {
+  "value": 4,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C29": {
+  "value": 14,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "C30": {
+  "value": 8.5,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C31": {
+  "value": 8.8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C32": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C33": {
+  "value": 9.2,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C34": {
+  "value": 8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C35": {
+  "value": 15.3,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "C36": {
+  "value": 3.6,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C37": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C38": {
+  "value": 9.6,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C39": {
+  "value": 8.8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C40": {
+  "value": 4.8,
+  "budget": 3.9,
+  "status": "Balanced"
+ },
+ "C41": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C42": {
+  "value": 9.5,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C43": {
+  "value": 2.5,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C44": {
+  "value": 9,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C45": {
+  "value": 10.5,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C46": {
+  "value": 9.3,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C47": {
+  "value": 4.5,
+  "budget": 3.9,
+  "status": "Balanced"
+ },
+ "C48": {
+  "value": 8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C49": {
+  "value": 10,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C50": {
+  "value": 9.3,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C51": {
+  "value": 8,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C52": {
+  "value": 9.6,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C53": {
+  "value": 3,
+  "budget": 3,
+  "status": "Balanced"
+ },
+ "C54": {
+  "value": 8.5,
+  "budget": 9,
+  "status": "Balanced"
+ },
+ "C55": {
+  "value": 14,
+  "budget": 15,
+  "status": "Balanced"
+ },
  "U01": {
   "value": 11,
   "budget": 11,
@@ -184,6 +359,136 @@
   "budget": 14.3,
   "status": "Balanced"
  },
+ "U15": {
+  "value": 11.7,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U16": {
+  "value": 8,
+  "budget": 6.5,
+  "status": "Balanced"
+ },
+ "U17": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U18": {
+  "value": 11.5,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U19": {
+  "value": 17,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U20": {
+  "value": 13.5,
+  "budget": 14.3,
+  "status": "Balanced"
+ },
+ "U21": {
+  "value": 17,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U22": {
+  "value": 17,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U23": {
+  "value": 16.5,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U24": {
+  "value": 5.6,
+  "budget": 5,
+  "status": "Balanced"
+ },
+ "U25": {
+  "value": 11.4,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U26": {
+  "value": 11.6,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U27": {
+  "value": 15.6,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U28": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U29": {
+  "value": 11,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U30": {
+  "value": 16.5,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U31": {
+  "value": 10.75,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U32": {
+  "value": 6.5,
+  "budget": 5,
+  "status": "Balanced"
+ },
+ "U33": {
+  "value": 10.5,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U34": {
+  "value": 10,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U35": {
+  "value": 12.5,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U36": {
+  "value": 10.8,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U37": {
+  "value": 17,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U38": {
+  "value": 18,
+  "budget": 17,
+  "status": "Balanced"
+ },
+ "U39": {
+  "value": 12,
+  "budget": 11,
+  "status": "Balanced"
+ },
+ "U40": {
+  "value": 10,
+  "budget": 11,
+  "status": "Balanced"
+ },
  "R01": {
   "value": 19,
   "budget": 19,
@@ -212,6 +517,126 @@
  "R06": {
   "value": 12,
   "budget": 13,
+  "status": "Balanced"
+ },
+ "R07": {
+  "value": 17.5,
+  "budget": 16.9,
+  "status": "Balanced"
+ },
+ "R08": {
+  "value": 19,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R09": {
+  "value": 16,
+  "budget": 16.9,
+  "status": "Balanced"
+ },
+ "R10": {
+  "value": 24,
+  "budget": 25,
+  "status": "Balanced"
+ },
+ "R11": {
+  "value": 20,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R12": {
+  "value": 25,
+  "budget": 25,
+  "status": "Balanced"
+ },
+ "R13": {
+  "value": 24,
+  "budget": 24.7,
+  "status": "Balanced"
+ },
+ "R14": {
+  "value": 20,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R15": {
+  "value": 14.5,
+  "budget": 13,
+  "status": "Balanced"
+ },
+ "R16": {
+  "value": 13,
+  "budget": 13,
+  "status": "Balanced"
+ },
+ "R17": {
+  "value": 19,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R18": {
+  "value": 18,
+  "budget": 19,
+  "status": "Balanced"
+ },
+ "R19": {
+  "value": 13,
+  "budget": 13,
+  "status": "Balanced"
+ },
+ "R20": {
+  "value": 18,
+  "budget": 16.9,
+  "status": "Balanced"
+ },
+ "R21": {
+  "value": 14,
+  "budget": 13,
+  "status": "Balanced"
+ },
+ "R22": {
+  "value": 13,
+  "budget": 13,
+  "status": "Balanced"
+ },
+ "L01": {
+  "value": 21,
+  "budget": 21,
+  "status": "Balanced"
+ },
+ "L02": {
+  "value": 15,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "L03": {
+  "value": 27.4,
+  "budget": 27.3,
+  "status": "Balanced"
+ },
+ "L04": {
+  "value": 27,
+  "budget": 27,
+  "status": "Balanced"
+ },
+ "L05": {
+  "value": 21,
+  "budget": 21,
+  "status": "Balanced"
+ },
+ "L06": {
+  "value": 15,
+  "budget": 15,
+  "status": "Balanced"
+ },
+ "L07": {
+  "value": 27.3,
+  "budget": 27.3,
+  "status": "Balanced"
+ },
+ "L08": {
+  "value": 20,
+  "budget": 21,
   "status": "Balanced"
  }
 }

@@ -8,6 +8,7 @@ signal hp_changed(new_hp: int, max_hp: int)
 signal block_changed(new_block: int)
 signal status_changed(status: String, new_amount: int)
 signal died
+signal invulnerable_changed(is_invulnerable: bool)
 
 const POISON := "poison"
 const WEAK := "weak"
@@ -22,6 +23,13 @@ var max_hp: int
 var hp: int
 var block: int = 0
 var statuses: Dictionary = {}
+## Invulnerable (Unbreakable): take_damage() does nothing while this is true.
+## CombatState turns it off at the start of the player's next turn.
+var invulnerable: bool = false:
+	set(value):
+		if invulnerable != value:
+			invulnerable = value
+			invulnerable_changed.emit(value)
 ## Turn statuses that skip their next countdown because they were applied
 ## during the enemy turn (so 1 Vulnerable from an enemy still lasts through
 ## the next enemy turn). status -> true.
@@ -87,7 +95,7 @@ func clear_block() -> void:
 
 ## Damage that block can stop. Returns the HP actually lost.
 func take_damage(amount: int) -> int:
-	if amount <= 0 or not is_alive():
+	if amount <= 0 or not is_alive() or invulnerable:
 		return 0
 	var absorbed := mini(block, amount)
 	if absorbed > 0:
@@ -119,14 +127,15 @@ func heal(amount: int) -> int:
 	return restored
 
 
-## Start of this combatant's turn: lose HP equal to Poison, then Poison - 1.
-## Returns the HP lost.
-func tick_poison() -> int:
+## Start of this combatant's turn: lose HP equal to Poison, then Poison - 1
+## (unless decay is false: Heart of the Hydra). Returns the HP lost.
+func tick_poison(decay: bool = true) -> int:
 	var p := get_status(POISON)
 	if p <= 0:
 		return 0
 	var lost := lose_hp(p)
-	set_status(POISON, p - 1)
+	if decay:
+		set_status(POISON, p - 1)
 	return lost
 
 
