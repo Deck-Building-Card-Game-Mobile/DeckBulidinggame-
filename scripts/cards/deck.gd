@@ -23,8 +23,19 @@ func size() -> int:
 	return cards.size()
 
 
+## False when the card is Unique (every Legendary) and the deck already has it.
+func can_add_card(card_id: String) -> bool:
+	if not CardDatabase.has_card(card_id):
+		return false
+	return not (CardDatabase.get_card(card_id).unique and count_of(card_id) > 0)
+
+
+## Adds a new copy. Returns null (and adds nothing) if it would break the
+## one-copy limit on Unique cards.
 func add_card(card_id: String, upgraded: bool = false) -> CardInstance:
 	assert(CardDatabase.has_card(card_id), "Unknown card id %s" % card_id)
+	if not can_add_card(card_id):
+		return null
 	var inst := CardInstance.new(card_id, upgraded)
 	cards.append(inst)
 	deck_changed.emit()

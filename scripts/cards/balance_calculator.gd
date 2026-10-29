@@ -5,7 +5,7 @@ extends RefCounted
 ##
 ##   Budget = (cost x points_per_energy + base_card_value + rarity_bonus)
 ##            x exhaust_multiplier (if the card exhausts)
-##   Value  = (sum(effect amount x price) + balance_other_value)
+##   Value  = (sum(effect amount x price) + retain value + balance_other_value)
 ##            x power_multiplier for Power cards.
 ##
 ## Conditional parts of effects (Parry's intent check, Bloodletter's heal on
@@ -38,10 +38,11 @@ static func value(card: CardData) -> float:
 	for e in card.effects:
 		var amt := float(e.get("amount", 0))
 		var all: bool = e.get("target", "") == "all_enemies"
+		if e.has("if_intent"):
+			continue  # conditional (Parry, Rebuke); priced in balance_other_value
 		match e["op"]:
 			"damage":
-				if e.has("if_intent"):
-					continue  # conditional; priced in balance_other_value
+				# Damage that copies block or Poison has amount 0; priced in balance_other_value.
 				total += amt * int(e.get("hits", 1)) * float(p["damage"]) * (all_mult if all else 1.0)
 			"block", "block_next_turn":
 				total += amt * float(p["block"])
@@ -49,7 +50,7 @@ static func value(card: CardData) -> float:
 				total += amt * float(p["heal"])
 			"draw":
 				total += amt * float(p["draw"])
-			"gain_energy":
+			"gain_energy", "energy_next_turn":
 				total += amt * float(p["energy"])
 			"lose_hp":
 				total -= amt * float(p["hp_loss"])
@@ -57,6 +58,8 @@ static func value(card: CardData) -> float:
 				total += amt * float(p[e["status"]]) * (all_mult if all else 1.0)
 			"power":
 				total += _power_value(e["power"], amt, p, all_mult)
+	if card.retain:
+		total += float(p.get("retain", 0))
 	total += card.balance_other_value
 	if card.is_power():
 		total *= float(b["power_multiplier"])
@@ -72,7 +75,15 @@ static func _power_value(power: String, amt: float, p: Dictionary, all_mult: flo
 			return amt * float(p["poison"]) * all_mult
 		"berserker_rage":
 			return amt * float(p["energy"])
-	return 0.0  # envenom, thorn_armor: balance_other_value only
+		"draw_per_turn":
+			return amt * float(p["draw"])
+		"strength_per_turn":
+			return amt * float(p["strength"])
+		"hp_loss_per_turn":
+			return -amt * float(p["hp_loss"])
+	# envenom, thorn_armor, barricade, poison_boost, retain_hand,
+	# double_attack_damage, poison_no_decay: balance_other_value only
+	return 0.0
 
 
 static func difference(card: CardData) -> float:
