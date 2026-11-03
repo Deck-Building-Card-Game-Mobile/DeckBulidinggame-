@@ -91,12 +91,18 @@ func discard_from_hand(card: CardInstance) -> bool:
 	return true
 
 
-## End of turn: the whole hand goes to the discard pile.
-## NOTE: This function is retained for compatibility with existing code.
-## The updated CombatState will no longer call it automatically each turn.
-func discard_hand() -> void:
-	discard_pile.append_array(hand)
-	hand.clear()
+## End of turn: the hand goes to the discard pile, except Retain cards
+## (or every card, when retain_all is true: Master Plan).
+func discard_hand(retain_all: bool = false) -> void:
+	if retain_all:
+		return
+	var kept: Array[CardInstance] = []
+	for card in hand:
+		if card.is_retain():
+			kept.append(card)
+		else:
+			discard_pile.append(card)
+	hand = kept
 	hand_changed.emit()
 
 

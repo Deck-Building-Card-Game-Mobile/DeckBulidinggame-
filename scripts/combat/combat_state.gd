@@ -24,14 +24,15 @@ extends RefCounted
 ## The last call ends the round and starts the player's next turn.
 ##
 ## A round
-##   1. Player turn start: lose all block -> Poison ticks -> energy refills
-##      (+Berserker Rage) -> Bulwark's delayed block -> Iron Skin block ->
-##      Black Plague poisons all enemies -> draw cards.     [turn_started]
+##   1. Player turn start: Invulnerable ends -> block clears unless Barricade
+##      -> Poison and Avatar of Rage HP loss -> energy refills (including saved
+##      energy) -> delayed block -> Iron Skin -> Bloodlust Strength ->
+##      Black Plague Poison -> draw cards.                  [turn_started]
 ##   2. Player plays cards.
-##   3. Player turn end: retain unused cards, Sharpen bonus expires.
-##                                                        [player_turn_ended]
-##   4. Enemy turn, one enemy at a time:                   [enemy_turn_started]
-##      lose block -> Poison ticks -> act on its intent.  [enemy_acted]
+##   3. Player turn end: unused cards stay in hand; Sharpen and Echo Strike
+##      expire.                                           [player_turn_ended]
+##      Extra turns skip the enemy turn.
+##   4. Enemy turn: block clears -> Poison ticks -> intent. [enemy_acted]
 ##   5. Round end: everyone's Weak/Vulnerable -1 (ones an enemy applied this
 ##      round skip this countdown), enemies show their next intent. [round_ended]
 
@@ -62,6 +63,14 @@ const POWER_ENVENOM := "envenom"
 const POWER_THORN_ARMOR := "thorn_armor"
 const POWER_BLACK_PLAGUE := "black_plague"
 const POWER_BERSERKER_RAGE := "berserker_rage"
+const POWER_DRAW_PER_TURN := "draw_per_turn"
+const POWER_STRENGTH_PER_TURN := "strength_per_turn"
+const POWER_BARRICADE := "barricade"
+const POWER_POISON_BOOST := "poison_boost"
+const POWER_RETAIN_HAND := "retain_hand"
+const POWER_DOUBLE_ATTACK_DAMAGE := "double_attack_damage"
+const POWER_HP_LOSS_PER_TURN := "hp_loss_per_turn"
+const POWER_POISON_NO_DECAY := "poison_no_decay"
 
 var player: Combatant
 var enemies: Array[Enemy] = []
@@ -93,7 +102,12 @@ var next_attack_bonus: int = 0
 
 ## Bulwark: block gained at the start of the next player turn.
 var pending_block_next_turn: int = 0
-
+## Tactical Retreat / Battle Rhythm: energy gained at the start of the next player turn.
+var pending_energy_next_turn: int = 0
+## Echo Strike: how many upcoming Attacks this turn are played twice.
+var echo_attacks: int = 0
+## Chronomancer's Hourglass: player turns to take before the enemies act again.
+var extra_turns: int = 0
 ## Quick Thinking: cards the player still has to discard (UI calls choose_discard()).
 var pending_discards: int = 0
 
@@ -118,6 +132,9 @@ func start(deck: Deck, player_hp: int, p_enemies: Array, p_rng: RandomNumberGene
 	powers.clear()
 	next_attack_bonus = 0
 	pending_block_next_turn = 0
+	pending_energy_next_turn = 0
+	echo_attacks = 0
+	extra_turns = 0
 	pending_discards = 0
 	_enemy_queue.clear()
 	phase = Phase.NOT_STARTED
@@ -148,14 +165,16 @@ func _start_player_turn() -> void:
 
 	turn += 1
 	_set_phase(Phase.PLAYER_TURN)
-
-	player.clear_block()
+	player.invulnerable = false
+	if get_power(POWER_BARRICADE) == 0:
+		player.clear_block()
 	player.tick_poison()
-
+	if get_power(POWER_HP_LOSS_PER_TURN) > 0:
+		player.lose_hp(get_power(POWER_HP_LOSS_PER_TURN))
 	if _check_end():
 		return
-
-	energy = GameRules.energy_per_turn() + get_power(POWER_BERSERKER_RAGE)
+	energy = GameRules.energy_per_turn() + get_power(POWER_BERSERKER_RAGE) + pending_energy_next_turn
+	pending_energy_next_turn = 0
 	energy_changed.emit(energy)
 
 	if pending_block_next_turn > 0:
@@ -164,35 +183,24 @@ func _start_player_turn() -> void:
 
 	if get_power(POWER_IRON_SKIN) > 0:
 		player_gain_block(get_power(POWER_IRON_SKIN))
-
+	if get_power(POWER_STRENGTH_PER_TURN) > 0:
+		player.add_status(Combatant.STRENGTH, get_power(POWER_STRENGTH_PER_TURN))
 	if get_power(POWER_BLACK_PLAGUE) > 0:
 		for e in living_enemies():
-			e.add_status(Combatant.POISON, get_power(POWER_BLACK_PLAGUE))
+			apply_player_poison(e, get_power(POWER_BLACK_PLAGUE))
 
-	# First turn: draw the normal starting hand.
-	# Later turns: use weighted RNG to draw 1, 2, or 3 cards.
-	#
-	# 1 card:  35%
-	# 2 cards: 50%
-	# 3 cards: 15%
-	#
-	# Unused cards remain in hand between turns.
-	# CardPiles enforces the maximum hand size.
-
+	# First turn uses the starting hand size. Later turns draw 1/2/3 cards
+	# with probabilities 35%/50%/15%. Unused cards remain in hand.
 	var cards_to_draw: int = GameRules.cards_drawn_per_turn()
-
 	if turn > 1:
 		var draw_roll: int = rng.randi_range(1, 100)
-
 		if draw_roll <= 35:
 			cards_to_draw = 1
 		elif draw_roll <= 85:
 			cards_to_draw = 2
 		else:
 			cards_to_draw = 3
-
-	piles.draw(cards_to_draw)
-
+	piles.draw(cards_to_draw + get_power(POWER_DRAW_PER_TURN))
 	turn_started.emit(turn)
 	_log("Turn %d: %d energy, %d cards in hand" % [
 		turn,
@@ -223,11 +231,16 @@ func can_end_turn() -> bool:
 func end_player_turn() -> bool:
 	if not can_end_turn():
 		return false
-
-	# Unused cards stay in the player's hand.
+	# Keep unused cards in hand between turns.
 	next_attack_bonus = 0
-
+	echo_attacks = 0
 	player_turn_ended.emit(turn)
+	if extra_turns > 0:
+		# Chronomancer's Hourglass: skip the enemy turn and the round end.
+		extra_turns -= 1
+		_log("Extra turn!")
+		_start_player_turn()
+		return true
 	_start_enemy_turn()
 
 	if not manual_enemy_turn:
@@ -259,8 +272,7 @@ func next_enemy_action() -> bool:
 			continue
 
 		e.clear_block()
-		e.tick_poison()
-
+		e.tick_poison(get_power(POWER_POISON_NO_DECAY) == 0)
 		if _check_end():
 			return false
 
@@ -373,6 +385,11 @@ func play_card(card: CardInstance, target_index: int = -1) -> bool:
 		next_attack_bonus = 0
 
 	EffectResolver.resolve(self, card, target, attack_bonus)
+	# Echo Strike: the Attack resolves a second time (Sharpen's bonus only once).
+	if card.is_attack() and echo_attacks > 0 and not is_over():
+		echo_attacks -= 1
+		_log("%s echoes" % card.get_name())
+		EffectResolver.resolve(self, card, target, 0)
 	piles.send_played_card(card)
 	card_played.emit(card, target)
 	_check_end()
@@ -448,7 +465,9 @@ func deal_attack_damage(attacker: Combatant, defender: Combatant, base: int, bon
 		multiplier: int = 1, from_attack_card: bool = false) -> int:
 	if not defender.is_alive():
 		return 0
-
+	# Avatar of Rage: the player's Attack cards deal double damage.
+	if from_attack_card and get_power(POWER_DOUBLE_ATTACK_DAMAGE) > 0:
+		multiplier *= 2
 	var dmg := calculate_attack_damage(attacker, defender, base, bonus) * multiplier
 	var block_before := defender.block
 	var lost := defender.take_damage(dmg)
@@ -457,9 +476,16 @@ func deal_attack_damage(attacker: Combatant, defender: Combatant, base: int, bon
 
 	# Envenom: the player's Attack cards that get through block apply Poison.
 	if from_attack_card and lost > 0 and defender.is_alive() and get_power(POWER_ENVENOM) > 0:
-		defender.add_status(Combatant.POISON, get_power(POWER_ENVENOM))
-
+		apply_player_poison(defender, get_power(POWER_ENVENOM))
 	return lost
+
+
+## Every time the player applies Poison it goes through here, so Malignancy
+## (poison_boost) adds its extra Poison.
+func apply_player_poison(target: Combatant, amount: int) -> void:
+	if amount <= 0 or not target.is_alive():
+		return
+	target.add_status(Combatant.POISON, amount + get_power(POWER_POISON_BOOST))
 
 
 ## Damage that isn't an attack (Thorn Armor): no Strength, Weak or Vulnerable.
