@@ -75,7 +75,7 @@ HOW THE ROLES WORK TOGETHER
 - All four members contribute code, tests, documentation, GitHub updates, and integration support.
 
 CARD SYSTEM
-The 43-card set, rules and keywords from docs/design/Dungeon_Card_Set_v1.xlsx are built in as
+The 128-card alpha set, rules and keywords from docs/design/Dungeon_Card_Set_Alpha_128.xlsx are built in as
 data (data/*.json) and GDScript (scripts/cards, scripts/combat). See docs/CARD_SYSTEM.md for how
 each role uses it. Run the tests with:
   godot --headless --path . --import
