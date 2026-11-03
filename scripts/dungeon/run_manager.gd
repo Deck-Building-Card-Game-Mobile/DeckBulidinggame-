@@ -222,7 +222,8 @@ func resolve_battle(result: String) -> void:
         finish_run(true)
         return
 
-    choices = RewardGenerator.generate_choices(rng)
+    # Pass the deck to exclude already-owned Unique cards.
+    choices = RewardGenerator.generate_choices(rng, -1, deck)
     show_rewards()
 
 
@@ -292,7 +293,13 @@ func select_reward(choice_index: int) -> void:
 
     # New card: add it immediately.
     if owned == 0:
-        deck.add_card(selected.id)
+        var added_card: CardInstance = deck.add_card(selected.id)
+
+        if added_card == null:
+            push_warning("Could not add reward card: %s" % selected.id)
+            show_rewards()
+            return
+
         print("Added new card: ", selected.name)
 
         choices.clear()
@@ -359,7 +366,14 @@ func add_duplicate_reward() -> void:
     if pending_reward_id.is_empty():
         return
 
-    deck.add_card(pending_reward_id)
+    var added_card: CardInstance = deck.add_card(pending_reward_id)
+
+    if added_card == null:
+        push_warning("Cannot add another copy of: %s" % pending_reward_id)
+        show_duplicate_reward_choice(
+            CardDatabase.get_card(pending_reward_id)
+        )
+        return
 
     print(
         "Added another copy of ",
