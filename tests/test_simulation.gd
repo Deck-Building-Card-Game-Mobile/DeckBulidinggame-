@@ -74,6 +74,7 @@ func test_random_decks_never_break_the_rules() -> void:
 		var deck := Deck.create_starter()
 		for i in 10:
 			deck.add_card(all[rng.randi_range(0, all.size() - 1)].id, rng.randf() < 0.3)
+		var deck_size := deck.size()   # may be < 20: duplicate Legendaries are refused
 		var c := CombatState.new()
 		var enemies := [
 			Enemy.new("Brute", 45, [{"type": "attack", "amount": 9}, {"type": "buff", "status": "strength", "amount": 1}]),
@@ -87,4 +88,4 @@ func test_random_decks_never_break_the_rules() -> void:
 			check(c.player.hp <= c.player.max_hp, "overhealed (seed %d)" % s)
 			c.end_player_turn()
 		check(c.is_over(), "fight never ended (seed %d)" % s)
-		check_eq(deck.size(), 20, "fight changed the run deck")
+		check_eq(deck.size(), deck_size, "fight changed the run deck")

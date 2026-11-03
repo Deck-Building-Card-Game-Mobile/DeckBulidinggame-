@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "keywords": [
     {
       "keyword": "Block",
@@ -48,13 +48,28 @@
     },
     {
       "keyword": "Intent",
-      "rule": "Enemies show what they'll do next turn. Some cards (Parry) check it.",
+      "rule": "Enemies show what they'll do next turn. Some cards (Parry, Rebuke) check it.",
       "implemented_by": "Role 1 + Role 3"
     },
     {
       "keyword": "Discard",
       "rule": "Choose a card from your hand to put in the discard pile.",
       "implemented_by": "Role 2 + Role 3"
+    },
+    {
+      "keyword": "Retain",
+      "rule": "This card isn't discarded at the end of your turn; it stays in your hand.",
+      "implemented_by": "Role 2"
+    },
+    {
+      "keyword": "Unique",
+      "rule": "You can only have one copy of this card in your deck. All Legendaries are Unique.",
+      "implemented_by": "Role 2 + Role 4"
+    },
+    {
+      "keyword": "Invulnerable",
+      "rule": "You take no damage until your next turn.",
+      "implemented_by": "Role 1"
     }
   ]
 }
