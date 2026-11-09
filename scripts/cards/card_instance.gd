@@ -55,7 +55,16 @@ func is_power() -> bool:
 
 
 func is_exhaust() -> bool:
-	return get_data().exhaust
+	var d := get_data()
+	return d.upgraded_exhaust if upgraded else d.exhaust
+
+
+func is_retain() -> bool:
+	return get_data().retain
+
+
+func is_unique() -> bool:
+	return get_data().unique
 
 
 func targets_enemy() -> bool:

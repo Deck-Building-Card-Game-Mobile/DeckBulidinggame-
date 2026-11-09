@@ -1,44 +1,73 @@
 
 extends Control
 
-## ROLE 4 - DUNGEON PROGRESSION AND INTEGRATION
+## DUNGEON PROGRESSION AND INTEGRATION
+## Role 4's progression system, integrated with Role 3's UI.
+## Includes grouped rest upgrades and duplicate reward choices.
 
-const COMBAT_SCENE = preload("res://scenes/ui/combat_hud.tscn")
+const COMBAT_SCENE: PackedScene = preload(
+    "res://scenes/ui/combat_hud.tscn"
+)
 
-# Prototype dungeon sequence.
-const ENCOUNTERS: Array[Dictionary] = [
-    {"kind": "battle", "name": "Dungeon Slime", "hp": 30, "damage": 6},
-    {"kind": "battle", "name": "Cave Rat", "hp": 36, "damage": 8},
-    {"kind": "rest"},
-    {"kind": "battle", "name": "Skeleton Guard", "hp": 48, "damage": 10},
-    {"kind": "boss", "name": "Dungeon Warden", "hp": 85, "damage": 13},
-]
+const MAIN_MENU_SCENE: String = (
+    "res://scenes/ui/main_menu.tscn"
+)
+
+# Single source of truth for all nine encounters.
+const ENCOUNTERS: Array[Dictionary] = EncounterManager.ENCOUNTERS
 
 var deck: Deck
-var current_hp: int
+var current_hp: int = 0
 var encounter_index: int = 0
 var status: String = "not_started"
+
 var rng := RandomNumberGenerator.new()
 var combat_hud: Control
 var choices: Array[CardData] = []
 
+var battle_result_pending: bool = false
+var boss_phase: int = 1
+
+# Used while the player decides what to do with a duplicate.
+var pending_reward_id: String = ""
+
 
 func _ready() -> void:
-    set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    set_anchors_and_offsets_preset(
+        Control.PRESET_FULL_RECT
+    )
+
     rng.randomize()
     start_new_run()
 
 
+# --------------------------------------------------
 # START / RESTART
+# --------------------------------------------------
+
 func start_new_run() -> void:
+    clear_screen()
+
     deck = Deck.create_starter()
     current_hp = GameRules.player_max_hp()
+
     encounter_index = 0
+    boss_phase = 1
     status = "playing"
+
+    choices.clear()
+    pending_reward_id = ""
+    battle_result_pending = false
+
+    print("New dungeon run started.")
+
     show_encounter()
 
 
+# --------------------------------------------------
 # DUNGEON PROGRESSION
+# --------------------------------------------------
+
 func show_encounter() -> void:
     if status != "playing":
         return
@@ -61,7 +90,10 @@ func show_encounter() -> void:
 
 func show_intro(encounter: Dictionary) -> void:
     var panel := create_panel(
-        "Encounter %d / %d" % [encounter_index + 1, ENCOUNTERS.size()]
+        "Encounter %d / %d" % [
+            encounter_index + 1,
+            ENCOUNTERS.size()
+        ]
     )
 
     add_text(panel, str(encounter["name"]))
@@ -78,59 +110,78 @@ func show_intro(encounter: Dictionary) -> void:
     add_button(panel, "Enter Battle", start_battle)
 
 
+# --------------------------------------------------
 # COMBAT INTEGRATION
+# --------------------------------------------------
+
 func start_battle() -> void:
-    clear_screen()
+    if status != "playing":
+        return
+
+    if battle_result_pending:
+        return
+
+    if encounter_index >= ENCOUNTERS.size():
+        return
 
     var encounter: Dictionary = ENCOUNTERS[encounter_index]
 
-    var actions: Array = [
-        {
-            "type": "attack",
-            "amount": int(encounter["damage"]),
-            "hits": 1
-        },
-        {
-            "type": "block",
-            "amount": 5
-        }
-    ]
+    if encounter["kind"] == "rest":
+        return
 
-    var enemy := Enemy.new(
-        str(encounter["name"]),
-        int(encounter["hp"]),
-        actions
-    )
+    clear_screen()
+    battle_result_pending = true
+
+    var enemy: Enemy = EncounterManager.create_enemy(encounter_index, boss_phase)
+    if enemy == null:
+        battle_result_pending = false
+        push_error("Cannot create enemy for encounter %d" % encounter_index)
+        return
 
     combat_hud = COMBAT_SCENE.instantiate()
+
+    # Must be set before add_child(), which triggers _ready().
+    combat_hud.dungeon_mode = true
+
     add_child(combat_hud)
 
     combat_hud.set_anchors_and_offsets_preset(
         Control.PRESET_FULL_RECT
     )
 
-    # Reuse the CombatState initialized by the existing HUD.
-    # Replace its demo battle before the first visible frame.
-    var combat: CombatState = combat_hud.combat
+    combat_hud.combat.combat_ended.connect(
+        _on_battle_finished
+    )
 
-    combat.combat_ended.connect(_on_battle_finished)
+    print("Starting dungeon battle: ", encounter["name"])
 
-    combat.start(
+    combat_hud.start_dungeon_battle(
         deck,
         current_hp,
         [enemy],
         rng
     )
 
-    combat_hud._refresh_hud()
 
+# --------------------------------------------------
+# BATTLE RESULTS
+# --------------------------------------------------
 
-# SAVE BATTLE RESULT
 func _on_battle_finished(result: String) -> void:
+    if not battle_result_pending:
+        return
+
     if combat_hud == null:
         return
 
+    if combat_hud.combat == null:
+        return
+
+    if combat_hud.combat.player == null:
+        return
+
     current_hp = combat_hud.combat.player.hp
+    battle_result_pending = false
 
     call_deferred("resolve_battle", result)
 
@@ -144,18 +195,36 @@ func resolve_battle(result: String) -> void:
         return
 
     if result != CombatState.RESULT_WON:
+        push_warning("Unexpected combat result: %s" % result)
         return
 
-    if ENCOUNTERS[encounter_index]["kind"] == "boss":
+    if encounter_index >= ENCOUNTERS.size():
+        return
+
+    var encounter: Dictionary = ENCOUNTERS[encounter_index]
+
+    if encounter["kind"] == "boss":
+        if boss_phase == 1:
+            boss_phase = 2
+            show_intro({"name": str(encounter.get("phase_2_name", "Boss Phase 2"))})
+            return
         finish_run(true)
         return
 
-    choices = RewardGenerator.generate_choices(rng)
+    # Elite victories guarantee a Legendary choice if one is available.
+    choices = RewardGenerator.generate_choices(
+        rng, -1, deck, encounter["kind"] == "elite"
+    )
     show_rewards()
 
 
+# --------------------------------------------------
 # CARD REWARDS
+# --------------------------------------------------
+
 func show_rewards() -> void:
+    pending_reward_id = ""
+
     var panel := create_panel("Battle Won!")
 
     add_text(
@@ -168,11 +237,12 @@ func show_rewards() -> void:
 
     add_text(
         panel,
-        "Choose one card to add to your deck, or skip:"
+        "Choose one card to add to your deck:"
     )
 
     for choice_index in range(choices.size()):
-        var card := choices[choice_index]
+        var card: CardData = choices[choice_index]
+        var owned: int = deck.count_of(card.id)
 
         var label := "%s (%s, %d energy) - %s" % [
             card.name,
@@ -180,6 +250,9 @@ func show_rewards() -> void:
             card.cost,
             card.text
         ]
+
+        if owned > 0:
+            label += "  [Owned: %d]" % owned
 
         add_button(
             panel,
@@ -195,16 +268,189 @@ func show_rewards() -> void:
 
 
 func select_reward(choice_index: int) -> void:
-    if choice_index >= 0 and choice_index < choices.size():
-        deck.add_card(choices[choice_index].id)
+    if status != "playing":
+        return
 
+    if choice_index < 0:
+        choices.clear()
+        advance_encounter()
+        return
+
+    if choice_index >= choices.size():
+        return
+
+    var selected: CardData = choices[choice_index]
+    var owned: int = deck.count_of(selected.id)
+
+    # New card: add it immediately.
+    if owned == 0:
+        var added_card: CardInstance = deck.add_card(selected.id)
+
+        if added_card == null:
+            push_warning("Could not add reward card: %s" % selected.id)
+            show_rewards()
+            return
+
+        print("Added new card: ", selected.name)
+
+        choices.clear()
+        advance_encounter()
+        return
+
+    # Duplicate: let the player decide how to use it.
+    pending_reward_id = selected.id
+    show_duplicate_reward_choice(selected)
+
+
+func show_duplicate_reward_choice(card: CardData) -> void:
+    var panel := create_panel("Duplicate Card Reward")
+
+    add_text(panel, card.name)
+
+    add_text(
+        panel,
+        "You already own %d copy/copies." % [
+            deck.count_of(card.id)
+        ]
+    )
+
+    add_text(panel, card.text)
+
+    add_text(
+        panel,
+        "Choose how to use this reward:"
+    )
+
+    add_button(
+        panel,
+        "Add Another Copy",
+        add_duplicate_reward
+    )
+
+    var upgradable: Array[CardInstance] = (
+        get_upgradable_copies(card.id)
+    )
+
+    if not upgradable.is_empty():
+        add_button(
+            panel,
+            "Upgrade Existing Copy",
+            upgrade_duplicate_reward
+        )
+    else:
+        add_text(
+            panel,
+            "All existing copies are already upgraded."
+        )
+
+    add_button(
+        panel,
+        "Back to Rewards",
+        show_rewards
+    )
+
+
+func add_duplicate_reward() -> void:
+    if status != "playing":
+        return
+
+    if pending_reward_id.is_empty():
+        return
+
+    var added_card: CardInstance = deck.add_card(pending_reward_id)
+
+    if added_card == null:
+        push_warning("Cannot add another copy of: %s" % pending_reward_id)
+        show_duplicate_reward_choice(
+            CardDatabase.get_card(pending_reward_id)
+        )
+        return
+
+    print(
+        "Added another copy of ",
+        pending_reward_id,
+        ". Total: ",
+        deck.count_of(pending_reward_id)
+    )
+
+    complete_reward_selection()
+
+
+func upgrade_duplicate_reward() -> void:
+    if status != "playing":
+        return
+
+    if pending_reward_id.is_empty():
+        return
+
+    var upgradable: Array[CardInstance] = (
+        get_upgradable_copies(pending_reward_id)
+    )
+
+    if upgradable.is_empty():
+        return
+
+    # Upgrade one existing copy rather than adding a new card.
+    var card: CardInstance = upgradable[0]
+
+    if not deck.upgrade_card(card):
+        return
+
+    print("Upgraded existing card: ", card.get_name())
+
+    complete_reward_selection()
+
+
+func complete_reward_selection() -> void:
+    pending_reward_id = ""
     choices.clear()
     advance_encounter()
 
 
+# --------------------------------------------------
+# CARD LOOKUP HELPERS
+# --------------------------------------------------
+
+func get_upgradable_copies(
+    card_id: String
+) -> Array[CardInstance]:
+    var result: Array[CardInstance] = []
+
+    for card in deck.cards:
+        if card.card_id == card_id and card.can_upgrade():
+            result.append(card)
+
+    return result
+
+
+func get_grouped_upgradable_cards() -> Dictionary:
+    # Groups copies by their card ID.
+    # Example: five Strikes become one entry.
+    var groups: Dictionary = {}
+
+    for card in deck.get_upgradable_cards():
+        if not groups.has(card.card_id):
+            groups[card.card_id] = {
+                "name": card.get_name(),
+                "count": 0
+            }
+
+        groups[card.card_id]["count"] += 1
+
+    return groups
+
+
+# --------------------------------------------------
 # REST AREA
+# --------------------------------------------------
+
 func show_rest() -> void:
-    var panel := create_panel("Rest Area")
+    var panel := create_panel(
+        "Encounter %d / %d - Rest Area" % [
+            encounter_index + 1,
+            ENCOUNTERS.size()
+        ]
+    )
 
     add_text(
         panel,
@@ -214,7 +460,10 @@ func show_rest() -> void:
         ]
     )
 
-    add_text(panel, "Choose one action:")
+    add_text(
+        panel,
+        "Choose one action:"
+    )
 
     add_button(
         panel,
@@ -222,44 +471,115 @@ func show_rest() -> void:
         rest_and_continue
     )
 
-    var upgradable := deck.get_upgradable_cards()
+    add_text(
+        panel,
+        "OR upgrade one card:"
+    )
 
-    if not upgradable.is_empty():
-        add_text(panel, "Or upgrade a card:")
+    var groups: Dictionary = get_grouped_upgradable_cards()
 
-        for card in upgradable:
-            add_button(
-                panel,
-                "Upgrade " + card.get_name(),
-                Callable(self, "upgrade_and_continue").bind(card)
+    if groups.is_empty():
+        add_text(
+            panel,
+            "No cards are currently available to upgrade."
+        )
+        return
+
+    # Scrollable list prevents long decks from overflowing.
+    var scroll := ScrollContainer.new()
+    scroll.custom_minimum_size = Vector2(340, 0)
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+    # Limit height while allowing scrolling.
+    scroll.custom_minimum_size.y = 220
+
+    panel.add_child(scroll)
+
+    var options := VBoxContainer.new()
+    options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    options.add_theme_constant_override("separation", 8)
+    scroll.add_child(options)
+
+    for card_id in groups.keys():
+        var group: Dictionary = groups[card_id]
+
+        var caption := "Upgrade %s (%d available)" % [
+            str(group["name"]),
+            int(group["count"])
+        ]
+
+        add_button(
+            options,
+            caption,
+            Callable(self, "upgrade_group_and_continue").bind(
+                str(card_id)
             )
+        )
+
+
+func upgrade_group_and_continue(card_id: String) -> void:
+    if status != "playing":
+        return
+
+    var available: Array[CardInstance] = (
+        get_upgradable_copies(card_id)
+    )
+
+    if available.is_empty():
+        return
+
+    # Upgrade the first eligible copy of this card type.
+    if not deck.upgrade_card(available[0]):
+        return
+
+    print("Rest area upgrade: ", available[0].get_name())
+
+    advance_encounter()
 
 
 func rest_and_continue() -> void:
+    if status != "playing":
+        return
+
     current_hp = mini(
         GameRules.player_max_hp(),
         current_hp + 20
     )
 
+    print("Rested. Current HP: ", current_hp)
+
     advance_encounter()
 
 
-func upgrade_and_continue(card: CardInstance) -> void:
-    if not deck.upgrade_card(card):
+# --------------------------------------------------
+# NEXT ENCOUNTER
+# --------------------------------------------------
+
+func advance_encounter() -> void:
+    if status != "playing":
         return
 
-    advance_encounter()
-
-
-# NEXT ENCOUNTER
-func advance_encounter() -> void:
     encounter_index += 1
+    boss_phase = 1
+
+    print("Advancing to encounter ", encounter_index + 1)
+
     show_encounter()
 
 
+# --------------------------------------------------
 # WIN / LOSE
+# --------------------------------------------------
+
 func finish_run(won: bool) -> void:
+    if status != "playing":
+        return
+
     status = "won" if won else "lost"
+    battle_result_pending = false
+    pending_reward_id = ""
+
+    print("Dungeon run finished: ", status)
 
     var panel := create_panel(
         "DUNGEON CLEARED!" if won else "RUN DEFEATED"
@@ -268,8 +588,19 @@ func finish_run(won: bool) -> void:
     add_text(
         panel,
         "Encounters completed: %d / %d" % [
-            encounter_index + (1 if won else 0),
+            mini(
+                encounter_index + (1 if won else 0),
+                ENCOUNTERS.size()
+            ),
             ENCOUNTERS.size()
+        ]
+    )
+
+    add_text(
+        panel,
+        "Final HP: %d / %d" % [
+            maxi(current_hp, 0),
+            GameRules.player_max_hp()
         ]
     )
 
@@ -292,12 +623,23 @@ func finish_run(won: bool) -> void:
 
 
 func go_to_menu() -> void:
-    get_tree().change_scene_to_file(
-        "res://scenes/ui/main_menu.tscn"
+    var error: Error = get_tree().change_scene_to_file(
+        MAIN_MENU_SCENE
     )
 
+    if error != OK:
+        push_error(
+            "Failed to return to main menu: %s" % error
+        )
+        return
 
+    queue_free()
+
+
+# --------------------------------------------------
 # SIMPLE UI HELPERS
+# --------------------------------------------------
+
 func clear_screen() -> void:
     for child in get_children():
         remove_child(child)
@@ -325,7 +667,10 @@ func create_panel(heading: String) -> VBoxContainer:
     return panel
 
 
-func add_text(panel: VBoxContainer, message: String) -> void:
+func add_text(
+    panel: VBoxContainer,
+    message: String
+) -> void:
     var label := Label.new()
     label.text = message
     label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

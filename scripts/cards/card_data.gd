@@ -12,6 +12,7 @@ const RARITY_STARTER := "Starter"
 const RARITY_COMMON := "Common"
 const RARITY_UNCOMMON := "Uncommon"
 const RARITY_RARE := "Rare"
+const RARITY_LEGENDARY := "Legendary"
 
 var id: String
 var name: String
@@ -21,6 +22,10 @@ var rarity: String
 var archetype: String
 var text: String
 var exhaust: bool
+## Retain: the card stays in your hand at the end of your turn.
+var retain: bool
+## Unique: only one copy allowed in a deck (every Legendary is Unique).
+var unique: bool
 ## True when the player must pick an enemy to play this card.
 var targets_enemy: bool
 ## List of effect dictionaries, e.g. {"op": "damage", "amount": 6, "target": "target"}.
@@ -35,6 +40,7 @@ var notes: String
 var upgraded_text: String
 var upgraded_effects: Array
 var upgraded_cost: int
+var upgraded_exhaust: bool
 
 ## How many copies go in the starter deck (0 for non-starter cards).
 var starter_copies: int
@@ -50,6 +56,8 @@ static func from_dict(d: Dictionary) -> CardData:
 	c.archetype = d["archetype"]
 	c.text = d["text"]
 	c.exhaust = bool(d.get("exhaust", false))
+	c.retain = bool(d.get("retain", false))
+	c.unique = bool(d.get("unique", false))
 	c.targets_enemy = bool(d.get("targets_enemy", false))
 	c.effects = _normalize_effects(d.get("effects", []))
 	c.keywords = d.get("keywords", [])
@@ -59,6 +67,7 @@ static func from_dict(d: Dictionary) -> CardData:
 	c.upgraded_text = up.get("text", c.text)
 	c.upgraded_effects = _normalize_effects(up.get("effects", d.get("effects", [])))
 	c.upgraded_cost = int(up.get("cost", c.cost))
+	c.upgraded_exhaust = bool(up.get("exhaust", c.exhaust))
 	c.starter_copies = int(d.get("starter_copies", 0))
 	return c
 
@@ -69,7 +78,7 @@ static func _normalize_effects(list: Array) -> Array:
 	var out: Array = []
 	for e in list:
 		var copy: Dictionary = (e as Dictionary).duplicate(true)
-		for key in ["amount", "hits", "heal_on_kill", "factor"]:
+		for key in ["amount", "hits", "heal_on_kill", "factor", "bonus"]:
 			if copy.has(key):
 				copy[key] = int(copy[key])
 		out.append(copy)
@@ -86,3 +95,7 @@ func is_power() -> bool:
 
 func is_starter() -> bool:
 	return rarity == RARITY_STARTER
+
+
+func is_legendary() -> bool:
+	return rarity == RARITY_LEGENDARY

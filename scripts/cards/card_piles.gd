@@ -1,5 +1,7 @@
+
 class_name CardPiles
 extends RefCounted
+
 ## The card zones during one fight (Role 2): draw pile, hand, discard pile,
 ## exhaust pile, and powers in play.
 ##
@@ -14,6 +16,7 @@ var draw_pile: Array[CardInstance] = []
 var hand: Array[CardInstance] = []
 var discard_pile: Array[CardInstance] = []
 var exhaust_pile: Array[CardInstance] = []
+
 ## Power cards stay here for the rest of the fight once played.
 var powers_in_play: Array[CardInstance] = []
 
@@ -48,21 +51,26 @@ func reshuffle_discard_into_draw() -> void:
 
 
 ## Draws up to `count` cards. If the draw pile runs out, the discard pile is
-## shuffled in. If the hand is full, extra drawn cards go straight to the
-## discard pile. Returns the cards that reached the hand.
+## shuffled in. Stops drawing when the hand reaches its maximum size.
+## Cards that cannot fit remain in the draw pile for future turns.
+## Returns the cards that reached the hand.
 func draw(count: int) -> Array[CardInstance]:
 	var drawn: Array[CardInstance] = []
 	for i in count:
+		# Stop drawing when the hand is full.
+		# Do not send extra cards to the discard pile.
+		if hand.size() >= max_hand_size:
+			break
+
 		if draw_pile.is_empty():
 			if discard_pile.is_empty():
 				break
 			reshuffle_discard_into_draw()
+
 		var card: CardInstance = draw_pile.pop_back()
-		if hand.size() >= max_hand_size:
-			discard_pile.append(card)
-		else:
-			hand.append(card)
-			drawn.append(card)
+		hand.append(card)
+		drawn.append(card)
+
 	if not drawn.is_empty():
 		hand_changed.emit()
 	return drawn
@@ -78,6 +86,8 @@ func take_from_hand(card: CardInstance) -> bool:
 	return true
 
 
+## Discards one selected card from the hand.
+## Supports manual discarding and card effects.
 func discard_from_hand(card: CardInstance) -> bool:
 	if not take_from_hand(card):
 		return false
@@ -85,10 +95,24 @@ func discard_from_hand(card: CardInstance) -> bool:
 	return true
 
 
-## End of turn: the whole hand goes to the discard pile.
-func discard_hand() -> void:
-	discard_pile.append_array(hand)
-	hand.clear()
+## End of turn: discard cards except those with Retain.
+## When retain_all is true (Master Plan), keep the entire hand.
+##
+## Gameplay branch compatibility:
+## CombatState can leave unused cards in the hand by not calling
+## this function automatically at the end of every turn.
+func discard_hand(retain_all: bool = false) -> void:
+	if retain_all:
+		return
+
+	var kept: Array[CardInstance] = []
+	for card in hand:
+		if card.is_retain():
+			kept.append(card)
+		else:
+			discard_pile.append(card)
+
+	hand = kept
 	hand_changed.emit()
 
 

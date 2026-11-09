@@ -76,7 +76,8 @@ it isn't, go all out on damage.
   - **Attack**: deals damage.
   - **Skill**: block, card draw, healing, debuffs, and other tricks.
   - **Power**: stays active for the rest of the fight once played.
-- **Rarity**: Common, Uncommon or Rare. Rares are the most powerful and the hardest to find.
+- **Rarity**: Common, Uncommon, Rare or **Legendary**. Legendaries are the most
+  powerful and the hardest to find, and you can only have **one copy** of each.
 - **Upgraded** cards have a **+** after their name (for example, *Slash+*) and are stronger.
 
 Tap a keyword on a card to see what it means.
@@ -95,6 +96,9 @@ Tap a keyword on a card to see what it means.
 | **Power** | Stays in play for the rest of the fight instead of going to the discard pile. |
 | **ALL enemies** | Hits every enemy in the fight. |
 | **Discard** | Choose a card from your hand to put in the discard pile. |
+| **Retain** | This card isn't discarded at the end of your turn; it stays in your hand for next turn. |
+| **Unique** | You can only have one copy of this card in your deck. Every Legendary is Unique. |
+| **Invulnerable** | You take no damage until your next turn. |
 | **Intent** | What an enemy plans to do next turn. Some cards (like Parry) check it. |
 
 Your hand holds at most **10 cards**. If you draw with a full hand, the extra
@@ -106,6 +110,8 @@ cards go straight to the discard pile.
 
 - **Card reward:** choose **1 of 3** new cards to add to your deck, or **skip**.
   Skipping is a real choice: a smaller deck draws your best cards more often.
+- **Legendary cards** show up rarely in normal rewards. After beating an
+  **elite** or the **boss**, one of your three choices is always a Legendary.
 - **Upgrade cards** to make them stronger *(where upgrades happen is coming soon)*.
 - **Remove cards** (usually Strikes and Defends) to make your deck more
   consistent *(coming soon)*.
@@ -149,3 +155,4 @@ Picking cards from one or two styles makes your deck work together.
 | Max hand size | 10 |
 | Starting deck | 5 Strike, 4 Defend, 1 Lantern Bash |
 | Card reward | Pick 1 of 3, or skip |
+| Cards in the game | 128 (8 Legendary) |

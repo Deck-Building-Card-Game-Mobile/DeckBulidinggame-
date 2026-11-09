@@ -1,47 +1,50 @@
 
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bxytbucsv67jg"]
 
-[ext_resource type="Script" path="res://scripts/ui/combat_hud.gd" id="1_combat"]
+[ext_resource type="Script" uid="uid://l2x2bvxi4hcf" path="res://scripts/ui/combat_hud.gd" id="1_combat"]
 
-[node name="CombatHUD" type="Control"]
+[node name="CombatHUD" type="Control" unique_id=442134425]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_combat")
 
-[node name="PlayerPanel" type="PanelContainer" parent="."]
+[node name="PlayerPanel" type="PanelContainer" parent="." unique_id=1255377078]
 layout_mode = 1
-anchors_preset = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 260.0
 offset_bottom = 155.0
 
-[node name="PlayerInfo" type="VBoxContainer" parent="PlayerPanel"]
+[node name="PlayerInfo" type="VBoxContainer" parent="PlayerPanel" unique_id=557384623]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="PlayerTitle" type="Label" parent="PlayerPanel/PlayerInfo"]
+[node name="PlayerTitle" type="Label" parent="PlayerPanel/PlayerInfo" unique_id=487985023]
 layout_mode = 2
 text = "PLAYER"
 horizontal_alignment = 1
 
-[node name="HealthLabel" type="Label" parent="PlayerPanel/PlayerInfo"]
+[node name="HealthLabel" type="Label" parent="PlayerPanel/PlayerInfo" unique_id=1901356965]
 layout_mode = 2
 text = "HP: 80 / 80"
 
-[node name="BlockLabel" type="Label" parent="PlayerPanel/PlayerInfo"]
+[node name="BlockLabel" type="Label" parent="PlayerPanel/PlayerInfo" unique_id=895555188]
 layout_mode = 2
 text = "Block: 0"
 
-[node name="EnergyLabel" type="Label" parent="PlayerPanel/PlayerInfo"]
+[node name="EnergyLabel" type="Label" parent="PlayerPanel/PlayerInfo" unique_id=1276016915]
 layout_mode = 2
 text = "Energy: 3 / 3"
 
-[node name="EnemyPanel" type="PanelContainer" parent="."]
+[node name="EnemyPanel" type="PanelContainer" parent="." unique_id=191830360]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -52,28 +55,28 @@ offset_right = -20.0
 offset_bottom = 175.0
 grow_horizontal = 0
 
-[node name="EnemyInfo" type="VBoxContainer" parent="EnemyPanel"]
+[node name="EnemyInfo" type="VBoxContainer" parent="EnemyPanel" unique_id=1468046058]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="EnemyTitle" type="Label" parent="EnemyPanel/EnemyInfo"]
+[node name="EnemyTitle" type="Label" parent="EnemyPanel/EnemyInfo" unique_id=1898670146]
 layout_mode = 2
 text = "ENEMY"
 horizontal_alignment = 1
 
-[node name="EnemyHealthLabel" type="Label" parent="EnemyPanel/EnemyInfo"]
+[node name="EnemyHealthLabel" type="Label" parent="EnemyPanel/EnemyInfo" unique_id=305242883]
 layout_mode = 2
 text = "HP: 40 / 40"
 
-[node name="EnemyBlockLabel" type="Label" parent="EnemyPanel/EnemyInfo"]
+[node name="EnemyBlockLabel" type="Label" parent="EnemyPanel/EnemyInfo" unique_id=1795964268]
 layout_mode = 2
 text = "Block: 0"
 
-[node name="EnemyIntentLabel" type="Label" parent="EnemyPanel/EnemyInfo"]
+[node name="EnemyIntentLabel" type="Label" parent="EnemyPanel/EnemyInfo" unique_id=212925018]
 layout_mode = 2
 text = "Next Action: Attack 8"
 
-[node name="BottomPanel" type="PanelContainer" parent="."]
+[node name="BottomPanel" type="PanelContainer" parent="." unique_id=1343166057]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -86,58 +89,67 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="BottomLayout" type="VBoxContainer" parent="BottomPanel"]
+[node name="BottomLayout" type="VBoxContainer" parent="BottomPanel" unique_id=1394377243]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ControlsRow" type="HBoxContainer" parent="BottomPanel/BottomLayout"]
+[node name="ControlsRow" type="HBoxContainer" parent="BottomPanel/BottomLayout" unique_id=2124222610]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="HandTitle" type="Label" parent="BottomPanel/BottomLayout/ControlsRow"]
+[node name="HandTitle" type="Label" parent="BottomPanel/BottomLayout/ControlsRow" unique_id=1200062695]
 layout_mode = 2
 text = "YOUR HAND"
 
-[node name="Spacer" type="Control" parent="BottomPanel/BottomLayout/ControlsRow"]
+[node name="Spacer" type="Control" parent="BottomPanel/BottomLayout/ControlsRow" unique_id=1359658178]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="EndTurnButton" type="Button" parent="BottomPanel/BottomLayout/ControlsRow"]
-layout_mode = 2
+[node name="EndTurnButton" type="Button" parent="BottomPanel/BottomLayout/ControlsRow" unique_id=1116449634]
 custom_minimum_size = Vector2(130, 45)
+layout_mode = 2
 text = "END TURN"
 
-[node name="HandScroll" type="ScrollContainer" parent="BottomPanel/BottomLayout"]
+[node name="HandScroll" type="ScrollContainer" parent="BottomPanel/BottomLayout" unique_id=84029791]
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 1
 vertical_scroll_mode = 0
 
-[node name="CardHand" type="HBoxContainer" parent="BottomPanel/BottomLayout/HandScroll"]
+[node name="CardHand" type="HBoxContainer" parent="BottomPanel/BottomLayout/HandScroll" unique_id=2080635049]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CardSlot1" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand"]
+[node name="CardSlot1" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand" unique_id=1690640075]
 custom_minimum_size = Vector2(140, 135)
 layout_mode = 2
-text = "STRIKE\nCost: 1\nDeal 6 damage"
+text = "STRIKE
+Cost: 1
+Deal 6 damage"
 
-[node name="CardSlot2" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand"]
+[node name="CardSlot2" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand" unique_id=2069175593]
 custom_minimum_size = Vector2(140, 135)
 layout_mode = 2
-text = "DEFEND\nCost: 1\nGain 5 block"
+text = "DEFEND
+Cost: 1
+Gain 5 block"
 
-[node name="CardSlot3" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand"]
+[node name="CardSlot3" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand" unique_id=1846524445]
 custom_minimum_size = Vector2(140, 135)
 layout_mode = 2
-text = "STRIKE\nCost: 1\nDeal 6 damage"
+text = "STRIKE
+Cost: 1
+Deal 6 damage"
 
-[node name="CardSlot4" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand"]
+[node name="CardSlot4" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand" unique_id=1458958108]
 custom_minimum_size = Vector2(140, 135)
 layout_mode = 2
-text = "DEFEND\nCost: 1\nGain 5 block"
+text = "DEFEND
+Cost: 1
+Gain 5 block"
 
-[node name="CardSlot5" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand"]
+[node name="CardSlot5" type="Button" parent="BottomPanel/BottomLayout/HandScroll/CardHand" unique_id=245603240]
 custom_minimum_size = Vector2(140, 135)
 layout_mode = 2
-text = "STRIKE\nCost: 1\nDeal 6 damage"
+text = "STRIKE
+Cost: 1
+Deal 6 damage"
