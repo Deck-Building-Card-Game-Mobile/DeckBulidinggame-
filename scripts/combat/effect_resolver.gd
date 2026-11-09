@@ -1,3 +1,4 @@
+
 class_name EffectResolver
 extends RefCounted
 ## Turns a card's effect list (data/cards.json) into changes to the fight.
@@ -103,6 +104,10 @@ static func _damage(combat: CombatState, card: CardInstance, e: Dictionary, pick
 		if e.has("bonus_if_status") and t.has_status(e["bonus_if_status"]):
 			base += int(e.get("bonus", 0))
 		for hit in int(e.get("hits", 1)):
+			# Stop additional hits once the target is defeated.
+			if not t.is_alive() or combat.is_over():
+				break
+
 			# Sharpen's bonus only applies to the first hit.
 			var hit_bonus := bonus if hit == 0 else 0
 			combat.deal_attack_damage(combat.player, t, base, hit_bonus, mult, card.is_attack())
