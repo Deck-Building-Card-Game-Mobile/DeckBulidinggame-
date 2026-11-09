@@ -1,4 +1,4 @@
-
+﻿
 extends Control
 
 ## DUNGEON PROGRESSION AND INTEGRATION
@@ -13,13 +13,8 @@ const MAIN_MENU_SCENE: String = (
     "res://scenes/ui/main_menu.tscn"
 )
 
-const ENCOUNTERS: Array[Dictionary] = [
-    {"kind": "battle", "name": "Dungeon Slime", "hp": 30, "damage": 6},
-    {"kind": "battle", "name": "Cave Rat", "hp": 36, "damage": 8},
-    {"kind": "rest"},
-    {"kind": "battle", "name": "Skeleton Guard", "hp": 48, "damage": 10},
-    {"kind": "boss", "name": "Dungeon Warden", "hp": 85, "damage": 13},
-]
+# Single source of truth for all nine encounters.
+const ENCOUNTERS: Array[Dictionary] = EncounterManager.ENCOUNTERS
 
 var deck: Deck
 var current_hp: int = 0
@@ -31,6 +26,7 @@ var combat_hud: Control
 var choices: Array[CardData] = []
 
 var battle_result_pending: bool = false
+var boss_phase: int = 1
 
 # Used while the player decides what to do with a duplicate.
 var pending_reward_id: String = ""
@@ -56,6 +52,7 @@ func start_new_run() -> void:
     current_hp = GameRules.player_max_hp()
 
     encounter_index = 0
+    boss_phase = 1
     status = "playing"
 
     choices.clear()
@@ -135,23 +132,11 @@ func start_battle() -> void:
     clear_screen()
     battle_result_pending = true
 
-    var actions: Array = [
-        {
-            "type": "attack",
-            "amount": int(encounter["damage"]),
-            "hits": 1
-        },
-        {
-            "type": "block",
-            "amount": 5
-        }
-    ]
-
-    var enemy := Enemy.new(
-        str(encounter["name"]),
-        int(encounter["hp"]),
-        actions
-    )
+    var enemy: Enemy = EncounterManager.create_enemy(encounter_index, boss_phase)
+    if enemy == null:
+        battle_result_pending = false
+        push_error("Cannot create enemy for encounter %d" % encounter_index)
+        return
 
     combat_hud = COMBAT_SCENE.instantiate()
 
@@ -219,11 +204,17 @@ func resolve_battle(result: String) -> void:
     var encounter: Dictionary = ENCOUNTERS[encounter_index]
 
     if encounter["kind"] == "boss":
+        if boss_phase == 1:
+            boss_phase = 2
+            show_intro({"name": str(encounter.get("phase_2_name", "Boss Phase 2"))})
+            return
         finish_run(true)
         return
 
-    # Pass the deck to exclude already-owned Unique cards.
-    choices = RewardGenerator.generate_choices(rng, -1, deck)
+    # Elite victories guarantee a Legendary choice if one is available.
+    choices = RewardGenerator.generate_choices(
+        rng, -1, deck, encounter["kind"] == "elite"
+    )
     show_rewards()
 
 
@@ -569,6 +560,7 @@ func advance_encounter() -> void:
         return
 
     encounter_index += 1
+    boss_phase = 1
 
     print("Advancing to encounter ", encounter_index + 1)
 
