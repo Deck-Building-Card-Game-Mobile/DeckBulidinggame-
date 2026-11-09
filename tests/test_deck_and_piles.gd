@@ -1,3 +1,4 @@
+
 extends TestCase
 ## Deck building and card movement during a fight (Role 2).
 
@@ -81,14 +82,19 @@ func test_draw_with_nothing_left() -> void:
 	check_eq(piles.hand.size(), 10)
 
 
-func test_hand_limit_sends_extras_to_discard() -> void:
+func test_hand_limit_keeps_extras_in_draw_pile() -> void:
 	var deck := Deck.new()
+
 	for i in 14:
 		deck.add_card("S01")
+
 	var piles := CardPiles.new(deck, _seeded(4))
 	piles.draw(14)
+
 	check_eq(piles.hand.size(), GameRules.max_hand_size())
-	check_eq(piles.discard_pile.size(), 4)
+	check_eq(piles.draw_pile.size(), 4)
+	check_eq(piles.discard_pile.size(), 0)
+	check_eq(piles.total_cards(), 14)
 
 
 func test_shuffle_is_seeded() -> void:

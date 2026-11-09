@@ -4,10 +4,12 @@ extends TestCase
 ## ROLE 4 - DUNGEON TESTS
 ## Tests encounter configuration, combat setup,
 ## deck persistence, rewards, and healing rules.
+## Updated for nine encounters, three elite enemies,
+## and a two-phase final boss.
 
 
 func test_encounter_count() -> void:
-    check_eq(EncounterManager.encounter_count(), 5)
+    check_eq(EncounterManager.encounter_count(), 9)
 
 
 func test_first_encounter() -> void:
@@ -19,34 +21,81 @@ func test_first_encounter() -> void:
 
 
 func test_encounter_sequence() -> void:
-    check_eq(EncounterManager.next_encounter(0), 1)
-    check_eq(EncounterManager.next_encounter(1), 2)
-    check_eq(EncounterManager.next_encounter(2), 3)
-    check_eq(EncounterManager.next_encounter(3), 4)
-    check_eq(EncounterManager.next_encounter(4), 5)
+    for index in range(9):
+        check_eq(
+            EncounterManager.next_encounter(index),
+            index + 1
+        )
 
 
 func test_rest_area() -> void:
-    check(EncounterManager.is_rest(2))
-    check(not EncounterManager.is_battle(2))
-    check(not EncounterManager.is_boss(2))
+    check(EncounterManager.is_rest(3))
+    check(not EncounterManager.is_battle(3))
+    check(not EncounterManager.is_boss(3))
+    check(not EncounterManager.is_elite(3))
 
 
 func test_boss_encounter() -> void:
-    check(EncounterManager.is_boss(4))
-    check(EncounterManager.is_battle(4))
+    check(EncounterManager.is_boss(8))
+    check(EncounterManager.is_battle(8))
     check(not EncounterManager.is_boss(0))
+    check(not EncounterManager.is_elite(8))
+
+
+func test_elite_encounters() -> void:
+    var elite_indices := [2, 5, 7]
+    var elite_names := [
+        "Armored Sentinel",
+        "Venomfang",
+        "Abyssal Champion"
+    ]
+
+    for i in range(elite_indices.size()):
+        var index: int = elite_indices[i]
+        var encounter := EncounterManager.get_encounter(index)
+
+        check(EncounterManager.is_elite(index))
+        check(EncounterManager.is_battle(index))
+        check(not EncounterManager.is_boss(index))
+        check(not EncounterManager.is_rest(index))
+
+        check_eq(encounter["kind"], "elite")
+        check_eq(encounter["name"], elite_names[i])
+
+
+func test_encounter_types() -> void:
+    var expected_kinds := [
+        "battle",
+        "battle",
+        "elite",
+        "rest",
+        "battle",
+        "elite",
+        "battle",
+        "elite",
+        "boss"
+    ]
+
+    for index in range(expected_kinds.size()):
+        var encounter := EncounterManager.get_encounter(index)
+
+        check_eq(
+            encounter["kind"],
+            expected_kinds[index]
+        )
 
 
 func test_dungeon_completion() -> void:
     check(not EncounterManager.dungeon_completed(0))
-    check(not EncounterManager.dungeon_completed(4))
-    check(EncounterManager.dungeon_completed(5))
+    check(not EncounterManager.dungeon_completed(8))
+    check(EncounterManager.dungeon_completed(9))
+    check(EncounterManager.dungeon_completed(10))
 
 
 func test_invalid_encounter() -> void:
     check(not EncounterManager.has_encounter(-1))
-    check(not EncounterManager.has_encounter(5))
+    check(not EncounterManager.has_encounter(9))
+    check(not EncounterManager.has_encounter(10))
     check(EncounterManager.get_encounter(99).is_empty())
 
 
@@ -61,8 +110,35 @@ func test_create_enemy() -> void:
         check_eq(enemy.current_intent()["amount"], 6)
 
 
+func test_create_elite_enemies() -> void:
+    var elite_indices := [2, 5, 7]
+    var elite_names := [
+        "Armored Sentinel",
+        "Venomfang",
+        "Abyssal Champion"
+    ]
+    var elite_hp := [65, 75, 90]
+
+    for i in range(elite_indices.size()):
+        var enemy := EncounterManager.create_enemy(
+            elite_indices[i]
+        )
+
+        check(enemy != null)
+
+        if enemy != null:
+            check_eq(
+                enemy.display_name,
+                elite_names[i]
+            )
+            check_eq(
+                enemy.max_hp,
+                elite_hp[i]
+            )
+
+
 func test_create_boss() -> void:
-    var boss := EncounterManager.create_enemy(4)
+    var boss := EncounterManager.create_enemy(8)
 
     check(boss != null)
 
@@ -72,8 +148,22 @@ func test_create_boss() -> void:
         check_eq(boss.current_intent()["amount"], 13)
 
 
+func test_create_boss_phase_two() -> void:
+    var boss := EncounterManager.create_enemy(8, 2)
+
+    check(boss != null)
+
+    if boss != null:
+        check_eq(
+            boss.display_name,
+            "Dungeon Warden - Awakened"
+        )
+        check_eq(boss.max_hp, 110)
+        check_eq(boss.current_intent()["amount"], 17)
+
+
 func test_rest_has_no_enemy() -> void:
-    check(EncounterManager.create_enemy(2) == null)
+    check(EncounterManager.create_enemy(3) == null)
 
 
 func test_starting_deck() -> void:
