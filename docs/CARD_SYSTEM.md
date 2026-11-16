@@ -175,7 +175,8 @@ Change them in one place if the team disagrees.
 
 ## Balance note
 
-The simulation shows the starter deck beats a normal enemy (12–25 HP from the
-Rules tab) in about **2 turns**, while the sheet targets **3–4**. Raising
-`normal_hp_min` / `normal_hp_max` in `data/rules.json` to roughly 35–45 would
-hit the target. Left unchanged for the team to decide.
+The simulation shows the starter deck beats a normal enemy (25 HP, the top of
+the 12–25 range from the Rules tab) in about **3 turns** (2.95 on the last
+run), at the low end of the sheet's **3–4** target. Raising `normal_hp_min` /
+`normal_hp_max` in `data/rules.json` would lengthen fights further. Left
+unchanged for the team to decide.
