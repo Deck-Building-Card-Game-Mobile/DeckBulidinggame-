@@ -1,4 +1,4 @@
-﻿# Dungeon Deck â€” Complete Developer and Codebase Onboarding Guide
+# Dungeon Deck — Complete Developer and Codebase Onboarding Guide
 
 **From Zero Programming Experience to Understanding, Maintaining, and Improving Dungeon Deck**
 
@@ -72,7 +72,7 @@ New programmers should begin with Part 2 and complete the exercises before attem
 
 ---
 
-# Part 1 â€” Getting Started
+# Part 1 — Getting Started
 
 ## 2. What Is Dungeon Deck?
 
@@ -142,6 +142,8 @@ You do not need to understand every Git command immediately, but you should lear
 
 ## 4. Downloading and Opening the Project
 
+Commands in this guide are labelled PowerShell, but they work the same in the macOS Terminal and Linux shells.
+
 Clone the repository:
 
 ```powershell
@@ -154,13 +156,9 @@ Enter the project directory:
 cd DeckBulidinggame-
 ```
 
-The original integrated handoff was developed on:
+The handoff version is on `main`, which is the default branch after cloning. It was integrated on `feature/ui-development`, which now points to the same commit.
 
-```powershell
-git switch feature/ui-development
-```
-
-Future contributors should confirm the team's current development branch before starting work.
+Create your own feature branch from `main` before making changes.
 
 ### Open in Godot
 
@@ -188,7 +186,7 @@ This opens the entire repository.
 
 ---
 
-# Part 2 â€” Programming Fundamentals for Complete Beginners
+# Part 2 — Programming Fundamentals for Complete Beginners
 
 ## 5. What Is Programming?
 
@@ -643,7 +641,7 @@ Use comments to explain decisions or complicated behavior.
 
 ---
 
-# Part 3 â€” Learning Godot
+# Part 3 — Learning Godot
 
 ## 16. Scenes and Nodes
 
@@ -880,7 +878,7 @@ This is the same general event-driven programming concept used in the project's 
 
 ---
 
-# Part 4 â€” Dungeon Deck Architecture
+# Part 4 — Dungeon Deck Architecture
 
 ## 24. The Four Main Systems
 
@@ -1046,7 +1044,7 @@ The root README and existing documentation may describe earlier versions of the 
 
 ---
 
-# Part 5 â€” Detailed Source Code Walkthrough
+# Part 5 — Detailed Source Code Walkthrough
 
 ## 27. Main Menu: Where the Game Begins
 
@@ -2116,7 +2114,7 @@ When changing parameters, search for every caller before committing.
 
 ---
 
-# Part 6 â€” How the Systems Connect
+# Part 6 — How the Systems Connect
 
 ## 40. Complete New Game Flow
 
@@ -2265,7 +2263,7 @@ Before modifying a variable, determine which class owns it.
 
 ---
 
-# Part 7 â€” Learning to Modify and Extend the Project
+# Part 7 — Learning to Modify and Extend the Project
 
 ## 45. Exercise 1: Change an Enemy's Health
 
@@ -2596,7 +2594,7 @@ The goal is to extend existing systems rather than create duplicate implementati
 
 ---
 
-# Part 8 â€” Debugging and Testing
+# Part 8 — Debugging and Testing
 
 ## 53. What Is Debugging?
 
@@ -2870,7 +2868,7 @@ When changing shared functionality, run the full test suite as well as the relev
 
 ---
 
-# Part 9 â€” Safe Development and Maintenance
+# Part 9 — Safe Development and Maintenance
 
 ## 65. Development Rules
 
@@ -2945,7 +2943,7 @@ Fetch changes:
 git fetch origin
 ```
 
-Create a feature branch from the team's designated development branch:
+Create a feature branch from `main`:
 
 ```powershell
 git switch -c feature/my-improvement
@@ -3013,7 +3011,7 @@ Before implementing a feature, determine which systems it affects and how the fe
 
 ---
 
-# Part 10 â€” Developer Reference and Learning Path
+# Part 10 — Developer Reference and Learning Path
 
 ## 69. Important Function Reference
 
@@ -3058,7 +3056,7 @@ Before implementing a feature, determine which systems it affects and how the fe
 
 ### Stage 1: Learn Programming
 
-Read Sections 5â€“15.
+Read Sections 5–15.
 
 Practice variables, conditions, functions, arrays, dictionaries, loops, and classes.
 
@@ -3066,7 +3064,7 @@ Practice variables, conditions, functions, arrays, dictionaries, loops, and clas
 
 ### Stage 2: Learn Godot
 
-Read Sections 16â€“23.
+Read Sections 16–23.
 
 Create a scene, add nodes, attach scripts, and connect signals.
 
@@ -3074,7 +3072,7 @@ Create a scene, add nodes, attach scripts, and connect signals.
 
 ### Stage 3: Read the Project
 
-Read Sections 24â€“44.
+Read Sections 24–44.
 
 Open the actual scripts and locate the functions described.
 
@@ -3084,7 +3082,7 @@ Follow the game from New Game through combat and progression.
 
 ### Stage 4: Make Small Changes
 
-Complete Exercises 1â€“3 and 6.
+Complete Exercises 1–3 and 6.
 
 **Goal:** Gain experience modifying and executing code.
 
@@ -3096,7 +3094,7 @@ Complete Exercises 4, 5, and 7.
 
 ### Stage 6: Debug and Maintain
 
-Read Sections 53â€“68.
+Read Sections 53–68.
 
 Run tests, investigate errors, and review dependencies.
 
@@ -3150,13 +3148,13 @@ https://docs.godotengine.org/en/stable/getting_started/step_by_step/index.html
 
 **Project documentation**
 
-- `Doc/README.md` â€” Overall project documentation.
-- `Doc/ONBOARDING.md` â€” This developer onboarding guide.
-- `docs/CARD_SYSTEM.md` â€” Card system reference.
-- `HOW_TO_PLAY.md` â€” Player-facing gameplay instructions.
-- `VISION.md` â€” Project vision.
-- `STAKEHOLDERS.md` â€” Stakeholder information.
-- `tests/` â€” Automated tests and examples of expected behavior.
+- `Doc/README.md` — Overall project documentation.
+- `Doc/ONBOARDING.md` — This developer onboarding guide.
+- `docs/CARD_SYSTEM.md` — Card system reference.
+- `HOW_TO_PLAY.md` — Player-facing gameplay instructions.
+- `VISION.md` — Project vision.
+- `STAKEHOLDERS.md` — Stakeholder information.
+- `tests/` — Automated tests and examples of expected behavior.
 
 ## 73. First Contribution Checklist
 

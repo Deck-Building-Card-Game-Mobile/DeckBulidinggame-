@@ -1,5 +1,7 @@
 # Dungeon Deck — Integration Changes and Role 3 Updates
 
+> **Note (November 2026):** This is a historical record of the `feature/ui-development` integration. The dungeon has since grown from five to nine encounters and everything is merged into `main`. For the current state, see `Doc/README.md`.
+
 ## Purpose
 
 This document tracks the changes made on the `feature/ui-development` branch while integrating and testing the team's systems.

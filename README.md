@@ -1,10 +1,35 @@
-# DeckBulidinggame-
+# Dungeon Deck
 
-DUNGEON ROGUELIKE DECK-BUILDING GAME
-FOUR-PERSON TEAM ROLES AND RESPONSIBILITIES
+A mobile dungeon roguelike deck-building game, built with Godot 4.7 and GDScript.
+Players use cards to battle enemies, earn new cards, improve their decks, and
+fight through nine dungeon encounters to a final boss. The game should be easy
+for beginners to learn while offering strategic variety.
 
-PROJECT OVERVIEW
-Our team is developing a mobile dungeon roguelike deck-building game. Players use cards to battle enemies, earn new cards, improve their decks, and progress through dungeon encounters toward a final boss. The game should be easy for beginners to learn while offering strategic variety.
+## New to this project? Start here
+
+| If you want to… | Read |
+|---|---|
+| Learn the codebase from scratch | `Doc/ONBOARDING.md` |
+| See what the game does today and how the systems connect | `Doc/README.md` |
+| Know what is unfinished or unverified | `Doc/KNOWN_ISSUES.md` |
+| Work on cards, combat rules or tests | `docs/CARD_SYSTEM.md` |
+| Learn the rules as a player | `HOW_TO_PLAY.md` |
+| Understand the goals and who the game is for | `VISION.md`, `STAKEHOLDERS.md` |
+| See the original team's feedback to each other | `team-feedback/` |
+
+There are two documentation folders. `Doc/` holds the handoff documents.
+`docs/` holds the card-system reference and the design spreadsheets
+(`docs/design/`).
+
+## Run the game
+
+1. Install Godot 4.7.
+2. Clone this repository. The handoff version is on `main`.
+3. In Godot, choose **Import**, select `project.godot`, then press **F5**.
+
+There are no mobile export presets yet; see `Doc/KNOWN_ISSUES.md`.
+
+## Original team and roles
 
 ROLE 1: GAMEPLAY & COMBAT DEVELOPER (Ahmed Zeyad Abou Agina)
 Main responsibility: Develop the rules and systems that control battles.
@@ -51,7 +76,7 @@ Responsibilities:
 Expected deliverable:
 A usable mobile interface through which players can navigate the game, understand their cards, and participate in battles.
 
-ROLE 4: DUNGEON PROGRESSION & INTEGRATION DEVELOPER
+ROLE 4: DUNGEON PROGRESSION & INTEGRATION DEVELOPER (Aayush Lohani)
 Main responsibility: Develop the structure of a complete dungeon run and coordinate system integration.
 
 Responsibilities:
@@ -124,7 +149,7 @@ This adjustment was made because drawing five cards every turn made combat too e
 - Player HP and deck changes carry between encounters.
 - Card rewards are available after battles.
 - Rest Area supports healing or card upgrades.
-- Five encounters are currently available, ending with the Dungeon Warden boss.
+- Nine encounters are available: four regular battles, three elites, one rest area, and the two-phase Dungeon Warden boss. See `Doc/README.md` for the full list.
 
 ### Feedback Requested From Teammates
 
@@ -152,4 +177,4 @@ Please test the updated gameplay and share suggestions about:
 - Dungeon pacing
 - Bugs or unexpected behavior
 
-These changes are currently on the `feature/ui-development` branch and are ready for team review.
+These changes were developed on `feature/ui-development` and are now merged into `main`.

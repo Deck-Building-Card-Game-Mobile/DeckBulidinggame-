@@ -130,7 +130,7 @@ Important files:
 
 - `scripts/dungeon/encounter_manager.gd`
 - `scripts/dungeon/run_manager.gd`
-- `scenes/dungeon/run_manager.tscn`
+- `scenes/dungeon/run_manager.tscn` (not loaded by the game; see `KNOWN_ISSUES.md`)
 
 The final integrated branch also contains changes made during cross-role integration. File ownership does not imply that only one team member contributed to a particular file.
 
@@ -462,6 +462,8 @@ Dungeon Deck/
 |
 |-- Doc/
 |   |-- README.md
+|   |-- ONBOARDING.md
+|   |-- KNOWN_ISSUES.md
 |
 |-- data/
 |   |-- cards.json
