@@ -13,4 +13,4 @@
 
 1. **Easy to learn** — rules and tutorials are designed for first-time players (Players, Playtesters).
 2. **Deck customization and strategy** — players can build decks and experiment with card combinations (Players).
-3.**Documented progress** — stakeholders, vision, requirements, and feedback are recorded in this repository (Instructor, Development Team).
+3. **Documented progress** — stakeholders, vision, requirements, and feedback are recorded in this repository (Instructor, Development Team).

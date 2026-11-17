@@ -8,7 +8,8 @@ it is all plain classes, so it works the same from UI, tests or a bot.
 
 **Alpha set:** 3 Starter, 55 Common, 40 Uncommon, 22 Rare, 8 Legendary.
 Legendaries are **Unique** (one copy per deck), drop 2% of the time in normal
-rewards, and one is always offered after elites and the boss.
+rewards, and one is always offered after elites. The boss fight ends the run
+with no reward.
 
 ## Files
 
@@ -19,7 +20,7 @@ rewards, and one is always offered after elites and the boss.
 | `data/keywords.json` | Rules text for tap-to-explain | Role 2 / 3 |
 | `scripts/cards/` | `CardData`, `CardDatabase`, `CardInstance`, `Deck`, `CardPiles`, `RewardGenerator`, `BalanceCalculator`, `Keywords`, `GameRules` | Role 2 |
 | `scripts/combat/` | `Combatant`, `Enemy`, `CombatState`, `EffectResolver` | Role 1 (with Role 2) |
-| `tests/` | Headless tests (121) | everyone |
+| `tests/` | Headless tests (141) | everyone |
 | `tools/export_expected_balance.py` | Copies the sheet's balance results into the tests | Role 2 |
 
 `data/cards.json` is the source of truth for the game. The spreadsheet stays
@@ -54,7 +55,7 @@ func _on_battle_ended(result: String) -> void:
     if result == CombatState.RESULT_WON:
         # 3 CardData, skippable. Pass the deck so owned Legendaries aren't offered.
         var choices := RewardGenerator.generate_choices(rng, -1, deck)
-        # Elite or boss fight: one of the 3 is always a Legendary
+        # Elite fight: one of the 3 is always a Legendary
         # var choices := RewardGenerator.generate_choices(rng, -1, deck, true)
         # after the player picks: deck.add_card(choices[i].id)
         # add_card returns null if it's a Unique card the deck already has
@@ -134,7 +135,10 @@ The sheet didn't specify these, so they follow common genre conventions.
 Change them in one place if the team disagrees.
 
 - **Turn order:** at the start of your turn you lose your block, Poison ticks,
-  energy refills, then Bulwark / Iron Skin block, Black Plague, and you draw 5.
+  energy refills, then Bulwark / Iron Skin block, Black Plague, and you draw:
+  5 on the first turn, then 1 (35%), 2 (50%) or 3 (15%) on later turns. These
+  odds are set in `scripts/combat/combat_state.gd`, not in `data/rules.json`.
+  Unused cards stay in hand at end of turn.
   Enemies act one at a time in order; each loses its block and takes Poison
   right before it acts, and an enemy killed by Poison doesn't act.
 - **Weak / Vulnerable** go down by 1 at the end of each round, after the
@@ -148,7 +152,8 @@ Change them in one place if the team disagrees.
 - **Sharpen** adds to the first hit of your next Attack only (Twin Strike gets +3 once).
 - **Envenom** triggers on each hit from an Attack card that gets past block.
 - **Thorn Armor** triggers every time you gain block, including Iron Skin and Bulwark.
-- **Hand limit** is 10. Cards drawn with a full hand go to the discard pile.
+- **Hand limit** is 10. If the hand is full, drawing stops; the cards stay in
+  the draw pile.
 - **Exhaust** removes a card for that fight only; the run deck is never changed by a fight.
 - **Powers** stack if you play two of the same.
 - **Retain** cards stay in your hand at end of turn and still count toward the
@@ -170,7 +175,8 @@ Change them in one place if the team disagrees.
 
 ## Balance note
 
-The simulation shows the starter deck beats a normal enemy (12–25 HP from the
-Rules tab) in about **2 turns**, while the sheet targets **3–4**. Raising
-`normal_hp_min` / `normal_hp_max` in `data/rules.json` to roughly 35–45 would
-hit the target. Left unchanged for the team to decide.
+The simulation shows the starter deck beats a normal enemy (25 HP, the top of
+the 12–25 range from the Rules tab) in about **3 turns** (2.95 on the last
+run), at the low end of the sheet's **3–4** target. Raising `normal_hp_min` /
+`normal_hp_max` in `data/rules.json` would lengthen fights further. Left
+unchanged for the team to decide.

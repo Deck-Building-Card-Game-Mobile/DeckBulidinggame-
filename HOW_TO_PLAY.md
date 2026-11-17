@@ -4,8 +4,8 @@ Fight your way through a dungeon with a deck of cards. Win battles, collect new
 cards, make your deck stronger, and defeat the boss at the end. If you run out
 of HP, the run is over and you start again with a fresh deck.
 
-> **Note for playtesters:** combat and cards are finished. Sections marked
-> *(coming soon)* are still being designed and may change.
+> **Note for playtesters:** combat, cards and the nine-encounter dungeon are
+> playable. Sections marked *(coming soon)* are not built yet.
 
 ---
 
@@ -36,12 +36,14 @@ These cards are basic on purpose. Almost every card you find will be better.
    - Any block you had left over goes away.
    - If you're poisoned, you lose HP.
    - Your energy refills to **3**.
-   - You draw **5 cards**.
+   - You draw cards: **5** on your first turn of a fight. On later turns you
+     draw **1** (35% of the time), **2** (50%) or **3** (15%).
 2. **Play cards.** Each card costs the energy shown in its corner. Play as many
    as you can afford, in any order. Cards that hit one enemy ask you to choose
    which enemy.
-3. **End your turn.** Unused energy is lost, and every card left in your hand
-   goes to the discard pile.
+3. **End your turn.** Unused energy is lost. Cards you didn't play **stay in
+   your hand** for next turn. If your hand is clogged, use **Discard Mode** to
+   throw cards away; discarding gives no energy and no replacement cards.
 4. **Enemies act.** Each enemy does exactly what its **intent** showed.
 5. Back to step 1.
 
@@ -80,7 +82,8 @@ it isn't, go all out on damage.
   powerful and the hardest to find, and you can only have **one copy** of each.
 - **Upgraded** cards have a **+** after their name (for example, *Slash+*) and are stronger.
 
-Tap a keyword on a card to see what it means.
+Keywords are explained in the table below. *(Tapping a keyword to see its
+meaning is coming soon.)*
 
 ## Keywords
 
@@ -101,8 +104,8 @@ Tap a keyword on a card to see what it means.
 | **Invulnerable** | You take no damage until your next turn. |
 | **Intent** | What an enemy plans to do next turn. Some cards (like Parry) check it. |
 
-Your hand holds at most **10 cards**. If you draw with a full hand, the extra
-cards go straight to the discard pile.
+Your hand holds at most **10 cards**. If your hand is full, you stop drawing;
+the cards stay in your draw pile.
 
 ---
 
@@ -111,16 +114,20 @@ cards go straight to the discard pile.
 - **Card reward:** choose **1 of 3** new cards to add to your deck, or **skip**.
   Skipping is a real choice: a smaller deck draws your best cards more often.
 - **Legendary cards** show up rarely in normal rewards. After beating an
-  **elite** or the **boss**, one of your three choices is always a Legendary.
-- **Upgrade cards** to make them stronger *(where upgrades happen is coming soon)*.
+  **elite**, one of your three choices is always a Legendary (if there is one
+  you don't already own). Beating the boss ends the run, so there is no reward
+  after it.
+- **Upgrade cards** to make them stronger. You can upgrade at the **Rest
+  Area**, or when a reward offers a card you already own.
 - **Remove cards** (usually Strikes and Defends) to make your deck more
   consistent *(coming soon)*.
 
-## The dungeon *(coming soon)*
+## The dungeon
 
-You move through a series of encounters, such as normal fights, tougher elite
-fights and rest spots, ending in a boss fight. The details of the map and each
-encounter type are still being designed.
+A run is nine encounters in a fixed order: Dungeon Slime, Cave Rat, Armored
+Sentinel (elite), a Rest Area, Skeleton Guard, Venomfang (elite), Crypt Knight,
+Abyssal Champion (elite), and the Dungeon Warden boss, who has two phases. At
+the Rest Area you choose between recovering 20 HP and upgrading a card.
 
 ---
 
@@ -151,7 +158,7 @@ Picking cards from one or two styles makes your deck work together.
 |---|---|
 | Starting HP | 70 |
 | Energy per turn | 3 |
-| Cards drawn per turn | 5 |
+| Cards drawn per turn | 5 on the first turn, then 1–3 at random |
 | Max hand size | 10 |
 | Starting deck | 5 Strike, 4 Defend, 1 Lantern Bash |
 | Card reward | Pick 1 of 3, or skip |

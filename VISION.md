@@ -12,7 +12,7 @@ who want a game that is easy to pick up but still rewards creative thinking,
 our game is a mobile deck-building card game
 that lets players build and customize their own decks
 Unlike many card games that overwhelm new players with complex rules
-our productis easy to learn while still offering enough variety.
+our product is easy to learn while still offering enough variety.
 
 ## Stakeholders
 
