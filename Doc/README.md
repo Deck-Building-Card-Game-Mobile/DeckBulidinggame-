@@ -463,7 +463,6 @@ Dungeon Deck/
 |-- Doc/
 |   |-- README.md
 |   |-- ONBOARDING.md
-|   |-- KNOWN_ISSUES.md
 |
 |-- data/
 |   |-- cards.json
@@ -471,6 +470,10 @@ Dungeon Deck/
 |   |-- rules.json
 |
 |-- docs/
+|   |-- HANDOFF.md
+|   |-- KNOWN_ISSUES.md
+|   |-- ONBOARDING-PROMPT.md
+|   |-- WORKING-AGREEMENT.md
 |   |-- CARD_SYSTEM.md
 |   |-- design/
 |

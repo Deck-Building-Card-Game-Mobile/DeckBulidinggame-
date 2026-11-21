@@ -9,17 +9,21 @@ for beginners to learn while offering strategic variety.
 
 | If you want to… | Read |
 |---|---|
+| Pick up where the original team left off | `docs/HANDOFF.md` |
 | Learn the codebase from scratch | `Doc/ONBOARDING.md` |
 | See what the game does today and how the systems connect | `Doc/README.md` |
-| Know what is unfinished or unverified | `Doc/KNOWN_ISSUES.md` |
+| Know what is unfinished or unverified | `docs/KNOWN_ISSUES.md` |
+| Get an AI assistant up to speed on the project | `docs/ONBOARDING-PROMPT.md` |
+| See how the team worked with AI | `docs/WORKING-AGREEMENT.md` |
 | Work on cards, combat rules or tests | `docs/CARD_SYSTEM.md` |
 | Learn the rules as a player | `HOW_TO_PLAY.md` |
 | Understand the goals and who the game is for | `VISION.md`, `STAKEHOLDERS.md` |
 | See the original team's feedback to each other | `team-feedback/` |
 
-There are two documentation folders. `Doc/` holds the handoff documents.
-`docs/` holds the card-system reference and the design spreadsheets
-(`docs/design/`).
+There are two documentation folders. `Doc/` holds the full project guide and
+the codebase onboarding guide. `docs/` holds the handoff notes, the known
+issues, the AI onboarding prompt, the working agreement, the card-system
+reference and the design spreadsheets (`docs/design/`).
 
 ## Run the game
 
@@ -27,7 +31,7 @@ There are two documentation folders. `Doc/` holds the handoff documents.
 2. Clone this repository. The handoff version is on `main`.
 3. In Godot, choose **Import**, select `project.godot`, then press **F5**.
 
-There are no mobile export presets yet; see `Doc/KNOWN_ISSUES.md`.
+There are no mobile export presets yet; see `docs/KNOWN_ISSUES.md`.
 
 ## Original team and roles
 
